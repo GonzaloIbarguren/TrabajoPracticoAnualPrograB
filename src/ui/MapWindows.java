@@ -154,6 +154,7 @@ public class MapWindows extends JFrame {
     public void updateMap(){
         repaint();
     }
+
     private void saveTrafficLights(List<TrafficLightController> list){
         try (ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream("trafficlights.dat"))){
             oss.writeObject(list);
