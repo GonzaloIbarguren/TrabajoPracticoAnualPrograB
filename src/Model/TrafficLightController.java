@@ -109,6 +109,9 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void setLocation(GeoPosition location) {
         this.location = location;
     }
+    public TrafficLight setLightMain(){
+        return light1;
+    }
 
     public TrafficLight getLightMain() {
         return light1;
