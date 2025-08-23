@@ -6,6 +6,8 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +19,10 @@ import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
-    private final List<TrafficLightController> trafficlights = loadTrafficLights();
+    private final List<TrafficLightController> trafficlights = new CopyOnWriteArrayList<>(loadTrafficLights());
     private boolean addingTrafficLight = false;
     private boolean deletingTrafficLight = false;
 
@@ -28,12 +31,22 @@ public class MapWindows extends JFrame {
         super("MAP");
         setSize(600, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        loadTrafficLights();
 
 
 
         JXMapViewer map = new JXMapViewer();
-        OSMTileFactoryInfo info = new OSMTileFactoryInfo();
+        TileFactoryInfo info = new TileFactoryInfo(
+                0, 19, 19,
+                256, true, true,
+                "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/",
+                "x", "y", "z") {
+            @Override
+            public String getTileUrl(int x, int y, int zoom) {
+                int invZoom = getMaximumZoomLevel() - zoom;
+                return this.baseURL + invZoom + "/" + x + "/" + y + ".png";
+            }
+        };
+
         map.setTileFactory(new DefaultTileFactory(info));
 
         var center = new GeoPosition(-38.0055, -57.5426);
@@ -87,10 +100,12 @@ public class MapWindows extends JFrame {
                    int y = viewport.y + clickedPoint.y;
                    Point2D point2D = new Point2D.Double(x, y);
                    GeoPosition geo = map.getTileFactory().pixelToGeo(point2D, map.getZoom());
-                   TrafficLightController controller = new TrafficLightController();
-                   controller.setLocation(geo);
 
                if (addingTrafficLight){
+                   String street1 = JOptionPane.showInputDialog("Ingrese la primera calle:");
+                   String street2 = JOptionPane.showInputDialog("Ingrese la segunda calle:");
+                   TrafficLightController controller = new TrafficLightController(street1,street2);
+                   controller.setLocation(geo);
                    trafficlights.add(controller);
                    new Thread(controller).start();
                    map.repaint();
@@ -132,23 +147,32 @@ public class MapWindows extends JFrame {
                 g.drawOval(x - size / 2, y - size / 2, size, size);
             }
         });
-        for (TrafficLightController controller : trafficlights){
-            new Thread(controller).start();
-        }
-
         add(map);
         setVisible(true);
         startUpdating();
+        for (TrafficLightController controller : trafficlights){
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            new Thread(controller).start();
+
+        }
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                for (TrafficLightController controller : trafficlights){
+                    controller.setLightMain().setState(Color.YELLOW);
+                }
                 saveTrafficLights(trafficlights);
             }
         });}
 
     private void startUpdating() {
-        Timer timer = new Timer(2000, e -> updateMap());
+        Timer timer = new Timer(500, e -> updateMap());
         timer.start();
     }
     public void updateMap(){
@@ -156,7 +180,7 @@ public class MapWindows extends JFrame {
     }
 
     private void saveTrafficLights(List<TrafficLightController> list){
-        try (ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream("trafficlights.dat"))){
+        try (ObjectOutputStream oss = new ObjectOutputStream(new FileOutputStream("trafficLights.dat"))){
             oss.writeObject(list);
         }catch (IOException e){
             e.printStackTrace();
