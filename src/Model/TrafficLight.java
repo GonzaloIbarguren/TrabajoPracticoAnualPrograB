@@ -11,7 +11,8 @@ public class TrafficLight implements Serializable {
     private boolean main = false;
     private Color state;
 
-    public TrafficLight() {
+    public TrafficLight(String street) {
+        this.street = street;
     }
     public void nextState(){
         if (state.equals(Color.RED))

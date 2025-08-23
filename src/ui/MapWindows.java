@@ -28,7 +28,6 @@ public class MapWindows extends JFrame {
         super("MAP");
         setSize(600, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        loadTrafficLights();
 
 
 
@@ -132,13 +131,19 @@ public class MapWindows extends JFrame {
                 g.drawOval(x - size / 2, y - size / 2, size, size);
             }
         });
-        for (TrafficLightController controller : trafficlights){
-            new Thread(controller).start();
-        }
-
         add(map);
         setVisible(true);
         startUpdating();
+        for (TrafficLightController controller : trafficlights){
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            new Thread(controller).start();
+
+        }
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -148,7 +153,7 @@ public class MapWindows extends JFrame {
         });}
 
     private void startUpdating() {
-        Timer timer = new Timer(2000, e -> updateMap());
+        Timer timer = new Timer(500, e -> updateMap());
         timer.start();
     }
     public void updateMap(){
