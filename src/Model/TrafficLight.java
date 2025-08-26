@@ -22,6 +22,7 @@ public class TrafficLight implements Serializable {
             else
                 this.state = Color.RED;
     }
+
     public Color getState() {
         return state;
     }
@@ -34,9 +35,15 @@ public class TrafficLight implements Serializable {
         return main;
     }
 
-    public void setMain() {
-        this.main = true;
-        this.state = Color.GREEN;
+    public String getStreet() {
+        return street;
+    }
+
+    public void changeMain() {
+        if (main)
+            main = false;
+        else
+            main = true;
     }
 }
 

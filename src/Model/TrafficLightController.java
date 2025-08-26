@@ -5,10 +5,8 @@ import org.jxmapviewer.viewer.GeoPosition;
 import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Duration;
 
 public class TrafficLightController extends Device implements Runnable, Serializable {
     @Serial
@@ -33,7 +31,7 @@ public class TrafficLightController extends Device implements Runnable, Serializ
         light2 = new TrafficLight(street2);
         light1.setState(Color.GREEN);
         light2.setState(Color.RED);
-        light1.setMain();
+        light1.changeMain();
     }
 
     @Override
@@ -109,12 +107,24 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void setLocation(GeoPosition location) {
         this.location = location;
     }
-    public TrafficLight setLightMain(){
-        return light1;
+
+    public void changeMainLight(){
+            light2.changeMain();
+            light1.changeMain();
     }
 
+
+    public TrafficLight getLightSecundary() {
+        if (light1.getMain())
+            return light2;
+        else
+            return light1;
+    }
     public TrafficLight getLightMain() {
-        return light1;
+        if (light1.getMain())
+            return light1;
+        else
+            return light2;
     }
 
     public void setDurationTwoRed(int durationTwoRed) {

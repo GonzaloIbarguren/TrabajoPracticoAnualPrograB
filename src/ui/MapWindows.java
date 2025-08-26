@@ -93,6 +93,32 @@ public class MapWindows extends JFrame {
        map.addMouseListener(new MouseAdapter() {
            @Override
            public void mouseClicked(MouseEvent e) {
+               Point clickedPoint = e.getPoint();
+               Rectangle viewport = map.getViewportBounds();
+               int x = viewport.x + clickedPoint.x;
+               int y = viewport.y + clickedPoint.y;
+               Point2D point2D = new Point2D.Double(x, y);
+               GeoPosition geo = map.getTileFactory().pixelToGeo(point2D, map.getZoom());
+
+               TrafficLightController clickedTrafficLight = null;
+               double threshold = 0.0001;
+                for (TrafficLightController controller : trafficlights){
+                    double dx = Math.abs(controller.getLocation().getLatitude() - geo.getLatitude());
+                    double dy = Math.abs(controller.getLocation().getLongitude() - geo.getLongitude());
+
+                    if (dx < threshold && dy < threshold){
+                        clickedTrafficLight = controller;
+                    }
+                }
+                if (clickedTrafficLight !=null){
+                    new  TrafficLightWindows(clickedTrafficLight);
+                }
+           }
+       });
+
+       map.addMouseListener(new MouseAdapter() {
+           @Override
+           public void mouseClicked(MouseEvent e) {
 
                    Point clickedPoint = e.getPoint();
                    Rectangle viewport = map.getViewportBounds();
@@ -165,11 +191,12 @@ public class MapWindows extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 for (TrafficLightController controller : trafficlights){
-                    controller.setLightMain().setState(Color.YELLOW);
+                    controller.getLightMain().setState(Color.YELLOW);
                 }
                 saveTrafficLights(trafficlights);
             }
         });}
+
 
     private void startUpdating() {
         Timer timer = new Timer(500, e -> updateMap());
