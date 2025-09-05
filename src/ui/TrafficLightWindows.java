@@ -9,39 +9,41 @@ import java.awt.*;
 public class TrafficLightWindows extends JFrame {
     private TrafficLightController controller;
     private Timer timer;
-    private IntersectionPanel intersectionPanel;
+    private Image backgroundImage;
     public TrafficLightWindows(TrafficLightController controller) {
         this.controller = controller;
+        backgroundImage = new ImageIcon("street.png").getImage();
         setTitle("Traffic Light info");
         setSize(400, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        intersectionPanel = new IntersectionPanel(controller);
+        JPanel panel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
 
-        JLabel street1Label = new JLabel("Calle 1: " + controller.getLightMain().getStreet());
-        JLabel street2Label = new JLabel("Calle 2: " + controller.getLightSecundary().getStreet());
+                g.drawImage(backgroundImage,0,0,getWidth(),getHeight(),this);
+                int size = 40;
 
+                int xMain = (int) (getWidth()*0.487)-size/2;
+                int yMain = (int) (getHeight()*0.3)-size/2;
 
+                g.setColor(controller.getLightMain().getState());
+                g.fillOval(xMain,yMain,size,size);
 
+                int xSec = (int) (getWidth()*0.65)-size/2;
+                int ySec = (int) (getHeight()*0.503)-size/2;
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel,BoxLayout.Y_AXIS));
-        infoPanel.add(street1Label);
-        infoPanel.add(street2Label);
-        add(intersectionPanel,BorderLayout.CENTER);
-        add(infoPanel,BorderLayout.SOUTH);
-
-
-
-        timer = new Timer(500,e -> intersectionPanel.repaint());
+                g.setColor(controller.getLightSecundary().getState());
+                g.fillOval(xSec,ySec,size,size);
+            }
+        };
+        timer = new Timer(500, e -> panel.repaint());
         timer.start();
-
+        add(panel);
         setVisible(true);
     }
 
-    public void dispose(){
-        super.dispose();
-        timer.stop();
-    }
 }
