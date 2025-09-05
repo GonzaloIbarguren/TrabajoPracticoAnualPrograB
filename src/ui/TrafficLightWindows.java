@@ -38,6 +38,21 @@ public class TrafficLightWindows extends JFrame {
 
                 g.setColor(controller.getLightSecundary().getState());
                 g.fillOval(xSec,ySec,size,size);
+
+                int boxWidth = (int) (getWidth()*0.2);
+                int boxHeight = (int) (getHeight()*0.15);
+                int margin = 20;
+                int boxX = (int) (getWidth()*0.7);
+                int boxY = (int) (getHeight()*0.05);
+
+                g.setColor(Color.BLACK);
+                g.fillRect(boxX,boxY,boxWidth,boxHeight);
+
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial",Font.BOLD,Math.max(12,boxHeight/5)));
+                g.drawString("Street 1: "+controller.getLightMain().getStreet(),boxX+10,boxY+20+boxHeight/25);
+                g.drawString("Street 1: "+controller.getLightSecundary().getStreet(),boxX+10,boxY+(2*boxHeight/3));
+
             }
         };
         timer = new Timer(500, e -> panel.repaint());
