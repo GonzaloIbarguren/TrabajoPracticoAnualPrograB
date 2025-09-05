@@ -55,8 +55,6 @@ public class TrafficLightWindows extends JFrame {
                 int boxX = (int) (getWidth()*0.7);
                 int boxY = (int) (getHeight()*0.05);
 
-                g.setColor(Color.BLACK);
-                g.fillRect(boxX,boxY,boxWidth,boxHeight);
                 if (controller.getLightMain().getMain()) {
                     g.setColor(Color.GREEN);
                     g.setFont(new Font("Arial", Font.BOLD, Math.max(12, boxHeight / 5)));
