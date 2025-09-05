@@ -99,6 +99,8 @@ public class MapWindows extends JFrame {
                Point2D point2D = new Point2D.Double(x, y);
                GeoPosition geo = map.getTileFactory().pixelToGeo(point2D, map.getZoom());
 
+               System.out.println(+ geo.getLatitude()+","+ geo.getLongitude());
+
                TrafficLightController clickedTrafficLight = null;
                double threshold = 0.0001;
                 for (TrafficLightController controller : trafficlights){
@@ -187,7 +189,7 @@ public class MapWindows extends JFrame {
 
         }
 
-        addWindowListener(new WindowAdapter() {
+    /*    addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 for (TrafficLightController controller : trafficlights) {
@@ -195,7 +197,7 @@ public class MapWindows extends JFrame {
                 }
                 saveTrafficLights(trafficlights);
             }
-        });
+        });*/
     }
 
 
@@ -243,6 +245,7 @@ public class MapWindows extends JFrame {
                 controller.getLightMain().setDirection(dir1);
                 controller.getLightSecundary().setStreet(street2);
                 controller.getLightSecundary().setDirection(dir2);
+                controller.getLightMain().setState(Color.YELLOW);
 
                 list.add(controller);
             }

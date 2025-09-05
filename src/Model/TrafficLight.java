@@ -39,11 +39,12 @@ public class TrafficLight implements Serializable {
         return street;
     }
 
-    public void changeMain() {
-        if (main)
-            main = false;
-        else
-            main = true;
+    public Orientation getDireccion() {
+        return direccion;
+    }
+
+    public void setMain(boolean main) {
+        this.main = main;
     }
 
     public void setStreet(String street) {

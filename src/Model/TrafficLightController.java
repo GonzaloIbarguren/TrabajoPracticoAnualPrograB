@@ -30,7 +30,7 @@ public class TrafficLightController extends Device implements Runnable, Serializ
         light2 = new TrafficLight();
         light1.setState(Color.GREEN);
         light2.setState(Color.RED);
-        light1.changeMain();
+        light1.setMain(true);
     }
 
     @Override
@@ -108,8 +108,13 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     }
 
     public void changeMainLight(){
-            light2.changeMain();
-            light1.changeMain();
+            if (light1.getMain()) {
+                light2.setMain(true);
+                light1.setMain(false);
+            }else {
+                light1.setMain(true);
+                light2.setMain(false);
+            }
     }
 
 
