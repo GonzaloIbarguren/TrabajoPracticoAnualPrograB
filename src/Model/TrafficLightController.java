@@ -5,10 +5,8 @@ import org.jxmapviewer.viewer.GeoPosition;
 import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Duration;
 
 public class TrafficLightController extends Device implements Runnable, Serializable {
     @Serial
@@ -16,24 +14,23 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     private LocalTime starTimeIntermittent, endTimeIntermittent;
     private int durationRed,durationGreen,durationYellow,durationTwoRed;
     private GeoPosition location;
-    private String street1,street2;
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
 
 
 
-    public TrafficLightController(String street1,String street2) {
+    public TrafficLightController() {
         this.durationGreen = 40000;
         this.durationYellow = 4000;
         this.durationTwoRed = 3000;
         this.durationRed = 30000;
         this.startCycle = LocalDateTime.now();
-        light1 = new TrafficLight(street1);
-        light2 = new TrafficLight(street2);
+        light1 = new TrafficLight();
+        light2 = new TrafficLight();
         light1.setState(Color.GREEN);
         light2.setState(Color.RED);
-        light1.setMain();
+        light1.setMain(true);
     }
 
     @Override
@@ -109,12 +106,29 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void setLocation(GeoPosition location) {
         this.location = location;
     }
-    public TrafficLight setLightMain(){
-        return light1;
+
+    public void changeMainLight(){
+            if (light1.getMain()) {
+                light2.setMain(true);
+                light1.setMain(false);
+            }else {
+                light1.setMain(true);
+                light2.setMain(false);
+            }
     }
 
+
+    public TrafficLight getLightSecundary() {
+        if (light1.getMain())
+            return light2;
+        else
+            return light1;
+    }
     public TrafficLight getLightMain() {
-        return light1;
+        if (light1.getMain())
+            return light1;
+        else
+            return light2;
     }
 
     public void setDurationTwoRed(int durationTwoRed) {
@@ -132,4 +146,5 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void setDurationRed(int durationRed) {
         this.durationRed = durationRed;
     }
+
 }
