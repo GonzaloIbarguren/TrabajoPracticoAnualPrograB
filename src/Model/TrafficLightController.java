@@ -146,4 +146,5 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void setDurationRed(int durationRed) {
         this.durationRed = durationRed;
     }
+
 }

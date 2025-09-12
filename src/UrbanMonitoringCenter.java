@@ -15,7 +15,7 @@ public class UrbanMonitoringCenter{
     public UrbanMonitoringCenter() {
         this.devices = new ArrayList<>();
         this.map = new MapWindows();
-
+       // windows = new TrafficLightWindows(new TrafficLightController());
 
 
 

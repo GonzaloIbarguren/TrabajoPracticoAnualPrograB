@@ -26,7 +26,6 @@ public class MapWindows extends JFrame {
     private boolean addingTrafficLight = false;
     private boolean deletingTrafficLight = false;
 
-
     public MapWindows() {
         super("MAP");
         setSize(600, 800);
@@ -35,7 +34,7 @@ public class MapWindows extends JFrame {
 
         JXMapViewer map = new JXMapViewer();
         TileFactoryInfo info = new TileFactoryInfo(
-                0, 19, 19,
+                4, 20, 20,
                 256, true, true,
                 "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/",
                 "x", "y", "z") {
@@ -178,7 +177,7 @@ public class MapWindows extends JFrame {
         add(map);
         setVisible(true);
         startUpdating();
-        for (TrafficLightController controller : trafficlights) {
+       for (TrafficLightController controller : trafficlights) {
 
             try {
                 Thread.sleep(5000);
@@ -199,7 +198,6 @@ public class MapWindows extends JFrame {
             }
         });*/
     }
-
 
     private void startUpdating() {
         Timer timer = new Timer(500, e -> updateMap());
