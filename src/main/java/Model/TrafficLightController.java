@@ -3,12 +3,13 @@ package Model;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
+import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class TrafficLightController extends Device implements Runnable, Serializable {
+public class TrafficLightController extends Device implements Runnable, Serializable, GenerateFine{
     @Serial
     private static final long serialVersionUID = 1L;
     private LocalTime starTimeIntermittent, endTimeIntermittent;
@@ -17,6 +18,7 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
+
 
 
 
@@ -50,8 +52,19 @@ public class TrafficLightController extends Device implements Runnable, Serializ
                 }
             }
     }
+    @Override
+    public void fineGenerate() {
+       // TypeInfraction typeInfraction = new TypeInfraction(TypesInfraction.RED_LIGHT,1000,1);
+        //Automobile automobile = new Automobile("AB098AA","Martin Perez","address");
+        //EventLocation eventLocation = new EventLocation(1,LocalDateTime.now(),light1.getStreet() + " y "+light2.getStreet());
+        //TrafficFine Fine = new TrafficFine(1,1,typeInfraction,automobile,eventLocation,1000);
 
-        private Boolean isIntermittentTime(){
+    }
+
+
+
+
+    private Boolean isIntermittentTime(){
         if (starTimeIntermittent == null || endTimeIntermittent == null) return false;
         LocalTime now = LocalTime.now();
         return(now.isAfter(starTimeIntermittent) && now.isBefore(endTimeIntermittent));

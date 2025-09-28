@@ -5,6 +5,7 @@ import Model.TrafficLightController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 
 public class TrafficLightWindows extends JFrame {
@@ -14,7 +15,7 @@ public class TrafficLightWindows extends JFrame {
 
     public TrafficLightWindows(TrafficLightController controller) {
         this.controller = controller;
-        backgroundImage = new ImageIcon("street.png").getImage();
+        backgroundImage = new ImageIcon(Objects.requireNonNull(TrafficLightWindows.class.getResource("/street.png"))).getImage();
 
 
         setTitle("Traffic Light info");

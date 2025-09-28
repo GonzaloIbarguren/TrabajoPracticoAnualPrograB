@@ -217,13 +217,12 @@ public class MapWindows extends JFrame {
 
     }
 
-    private List<TrafficLightController> loadTrafficLightsFromTxt() {
+    private List<TrafficLightController> loadTrafficLightsFromTxt()  {
         List<TrafficLightController> list = new ArrayList<>();
+        InputStream input = getClass().getClassLoader().getResourceAsStream("TrafficLight.txt");
 
-        File file = new File("TrafficLight.txt");
-        if (!file.exists()) return list;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(input))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
