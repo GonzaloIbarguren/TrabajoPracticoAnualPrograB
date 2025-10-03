@@ -54,7 +54,7 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     }
     @Override
     public void fineGenerate() {
-       // TypeInfraction typeInfraction = new TypeInfraction(TypesInfraction.RED_LIGHT,1000,1);
+        // TypeInfraction typeInfraction = new TypeInfraction(TypesInfraction.RED_LIGHT,1000,1);
         //Automobile automobile = new Automobile("AB098AA","Martin Perez","address");
         //EventLocation eventLocation = new EventLocation(1,LocalDateTime.now(),light1.getStreet() + " y "+light2.getStreet());
         //TrafficFine Fine = new TrafficFine(1,1,typeInfraction,automobile,eventLocation,1000);
