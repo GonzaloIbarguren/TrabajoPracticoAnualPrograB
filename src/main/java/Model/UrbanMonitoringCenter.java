@@ -1,5 +1,6 @@
 package Model;
 
+import org.jxmapviewer.viewer.GeoPosition;
 import ui.MapWindows;
 import ui.TrafficLightWindows;
 
@@ -16,8 +17,8 @@ public class UrbanMonitoringCenter{
 
     public UrbanMonitoringCenter() {
         this.devices = new ArrayList<>();
-        //this.map = new MapWindows();
-       // windows = new TrafficLightWindows(new TrafficLightController());
+        this.map = new MapWindows();
+        windows = new TrafficLightWindows(new TrafficLightController());
 
         TrafficLight light1 = new TrafficLight();
         TrafficLight light2 = new TrafficLight();
@@ -26,12 +27,7 @@ public class UrbanMonitoringCenter{
         EventLocation eventLocation = new EventLocation(1, LocalDateTime.now(),light1.getStreet() + " y "+light2.getStreet());
         TrafficFine Fine = new TrafficFine(342,1,typeInfraction,automobile,eventLocation,BigDecimal.valueOf(23151.33));
 
-
     }
-
-
-
-
 
     public static void main(String[] arg){
         new UrbanMonitoringCenter();

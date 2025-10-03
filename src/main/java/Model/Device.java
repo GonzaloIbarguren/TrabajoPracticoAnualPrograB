@@ -1,10 +1,33 @@
 package Model;
 
+import org.jxmapviewer.viewer.GeoPosition;
+
 public class Device {
     private String id;
-    private Location location;
+    private GeoPosition location;
 
     public Device() {
+    }
+
+    public Device(String id, GeoPosition location) {
+        this.id = id;
+        this.location = location;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public GeoPosition getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoPosition location) {
+        this.location = location;
     }
 
 }
