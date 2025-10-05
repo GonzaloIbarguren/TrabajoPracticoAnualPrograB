@@ -14,25 +14,26 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     private static final long serialVersionUID = 1L;
     private LocalTime starTimeIntermittent, endTimeIntermittent;
     private int durationRed,durationGreen,durationYellow,durationTwoRed;
-    private GeoPosition location;
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
 
 
-
-
     public TrafficLightController() {
-        this.durationGreen = 40000;
-        this.durationYellow = 4000;
-        this.durationTwoRed = 3000;
-        this.durationRed = 30000;
-        this.startCycle = LocalDateTime.now();
-        light1 = new TrafficLight();
-        light2 = new TrafficLight();
-        light1.setState(Color.GREEN);
-        light2.setState(Color.RED);
-        light1.setMain(true);
+        super(null,null);
+    }
+
+    public TrafficLightController(String id, double latitude, double longitude, TrafficLight light1, TrafficLight light2) {
+        GeoPosition pos = new GeoPosition(latitude,longitude);
+        super(id,pos);
+
+        this.light1 = light1;
+        this.light2 = light2;
+
+        durationGreen = 40000;
+        durationYellow = 4000;
+        durationTwoRed = 3000;
+        durationRed = 30000;
     }
 
     @Override
@@ -112,13 +113,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     public void stop(){
         this.running = false;}
 
-    public GeoPosition getLocation() {
-        return location;
-    }
-
-    public void setLocation(GeoPosition location) {
-        this.location = location;
-    }
 
     public void changeMainLight(){
             if (light1.getMain()) {
