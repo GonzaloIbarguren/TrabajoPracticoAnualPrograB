@@ -7,12 +7,19 @@ import java.io.Serializable;
 public class TrafficLight implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private Orientation direccion;
+    private Orientation orientation;
     private String street;
-    private boolean main = false;
+    private boolean main;
     private Color state;
 
     public TrafficLight() {
+    }
+
+    public TrafficLight(String street, String orientation, Boolean main) {
+        this.street = street;
+        this.orientation = Orientation.valueOf(orientation);
+        this.main = main;
+        state = Color.YELLOW;
     }
 
     public void nextState(){
@@ -40,8 +47,8 @@ public class TrafficLight implements Serializable {
         return street;
     }
 
-    public Orientation getDireccion() {
-        return direccion;
+    public Orientation getOrientation() {
+        return orientation;
     }
 
     public void setMain(boolean main) {
@@ -53,7 +60,7 @@ public class TrafficLight implements Serializable {
     }
 
     public void setDirection(Orientation direction) {
-        this.direccion = direction;
+        this.orientation = direction;
     }
 }
 
