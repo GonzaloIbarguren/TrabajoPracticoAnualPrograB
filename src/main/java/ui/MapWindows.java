@@ -1,7 +1,6 @@
 package ui;
 
-import Model.Orientation;
-import Model.TrafficLightController;
+import Model.*;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.viewer.DefaultTileFactory;
@@ -9,6 +8,9 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 
 
+import java.awt.geom.AffineTransform;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,9 +21,13 @@ import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
+
+    private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
+
     private final List<TrafficLightController> trafficlights = new CopyOnWriteArrayList<>(loadTrafficLights());
     private boolean addingTrafficLight = false;
     private boolean deletingTrafficLight = false;
@@ -157,6 +163,7 @@ public class MapWindows extends JFrame {
            }
        });*/
 
+
         map.setOverlayPainter((g, mapViewer, width, height) -> {
             for (TrafficLightController controller : trafficlights) {
                 GeoPosition pos = controller.getLocation();
@@ -173,10 +180,28 @@ public class MapWindows extends JFrame {
                 g.setColor(Color.BLACK);
                 g.drawOval(x - size / 2, y - size / 2, size, size);
             }
+            for (Radar radar : radars) {
+                Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                        radar.getLocation(),
+                        mapViewer.getZoom()
+                );
+                Rectangle viewport = mapViewer.getViewportBounds();
+
+                int x = (int) (pt.getX() - viewport.getX());
+                int y = (int) (pt.getY() - viewport.getY());
+
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/RedRadar.PNG")));
+                Image img = icon.getImage();
+                g.drawImage(img, x-10, y-10, 20, 20, null);
+            }
+
+
         });
         add(map);
         setVisible(true);
         startUpdating();
+
+
        for (TrafficLightController controller : trafficlights) {
 
             try {
@@ -267,4 +292,36 @@ public class MapWindows extends JFrame {
         // si no existe el .dat, cargar desde txt
         return loadTrafficLightsFromTxt();
     }
+
+
+
+    private List<Radar> loadRadarsFromTxt() {
+        List<Radar> list = new ArrayList<>();
+        InputStream input = getClass().getClassLoader().getResourceAsStream("Radar.txt");
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(input))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                double lat = Double.parseDouble(parts[0].trim());
+                double lon = Double.parseDouble(parts[1].trim());
+                int velocidadMax = Integer.parseInt(parts[2].trim());
+
+                Radar radar = new Radar(
+                        "Radar_" + list.size(),
+                        new GeoPosition(lat,lon),
+                        velocidadMax );
+
+                list.add(radar);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+
 }

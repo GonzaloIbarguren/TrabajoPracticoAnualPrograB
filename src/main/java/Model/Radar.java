@@ -1,40 +1,26 @@
 package Model;
 
-import java.math.BigDecimal;
+import org.jxmapviewer.viewer.GeoPosition;
 
-public class Radar extends Device implements GenerateFine{
+public class Radar extends Device {
+    private int velocidadMaxima;
 
-    private double speedLimit;
-    private EventLocation speedingLocation;
-    private Automobile speedingAutomobile;
-    private TypeInfraction speedingType;
 
-    public Radar(double speedLimit){
-        this.speedLimit = speedLimit;
+    public Radar(String id, GeoPosition location, int velocidadMaxima) {
+        super(id, location);
+        this.velocidadMaxima = velocidadMaxima;
     }
 
-    public double getSpeedLimit() {
-        return speedLimit;
+    public int getVelocidadMaxima() {
+        return velocidadMaxima;
     }
 
-    public void setSpeedLimit(double speedLimit) {
-        this.speedLimit = speedLimit;
+    public void setVelocidadMaxima(int velocidadMaxima) {
+        this.velocidadMaxima = velocidadMaxima;
     }
 
-    public SpeedFine detectAndFine (double automobileSpeed, double speedingLimit, int fineNumber, int pointScoring, TypeInfraction typeInfraction, Automobile automobile, EventLocation locationEvent, BigDecimal baseAmount){
-        if (automobileSpeed  > speedLimit){
-            return new SpeedFine(automobileSpeed, speedingLimit, fineNumber, pointScoring, typeInfraction, automobile, locationEvent, baseAmount);
-        }
-        else
-            return null;
-    }
 
-    @Override
-    public void fineGenerate() {
-        speedingLocation = ;
-        speedingAutomobile = ;
-        speedingType = ;
-
-        TrafficFine radarFine = new SpeedFine();
+    public boolean detectarExcesoVelocidad(Automobile auto, int velocidadActual) {
+        return velocidadActual > velocidadMaxima;
     }
 }
