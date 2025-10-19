@@ -1,11 +1,17 @@
 package Model;
 
+import dataBase.DataBaseConnection;
+import dataBase.TrafficFineDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
 import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -17,6 +23,8 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
+
+
 
 
     public TrafficLightController() {
@@ -55,10 +63,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     }
     @Override
     public void fineGenerate() {
-       // TypeInfraction typeInfraction = new TypeInfraction(TypesInfraction.RED_LIGHT,1000,1);
-        //Automobile automobile = new Automobile("AB098AA","Martin Perez","address");
-        //EventLocation eventLocation = new EventLocation(1,LocalDateTime.now(),light1.getStreet() + " y "+light2.getStreet());
-        //TrafficFine Fine = new TrafficFine(1,1,typeInfraction,automobile,eventLocation,1000);
 
     }
 
@@ -112,7 +116,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
 
     public void stop(){
         this.running = false;}
-
 
     public void changeMainLight(){
             if (light1.getMain()) {

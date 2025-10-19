@@ -1,5 +1,6 @@
 package Model;
 
+import dataBase.TrafficFineDAO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,19 @@ public class UrbanMonitoringCenter{
     private MapWindows map;
     private TrafficLightWindows windows;
 
-    public UrbanMonitoringCenter() {
-        this.devices = new ArrayList<>();
-        this.map = new MapWindows(controllers);
-
-
-
+    public UrbanMonitoringCenter()  {
+        // this.devices = new ArrayList<>();
+        // this.map = new MapWindows(controllers);
+        TrafficFineDAO dao = new TrafficFineDAO();
+        Automobile a = new Automobile() ;
+      try {
+         a = dao.findAutomobileByPlate("AB123CD");
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
+       System.out.println(a.getLicensePlate());
+       System.out.println(a.getOwner());
+       System.out.println(a.getModel().getName());
     }
     public List<TrafficLightController> loadTrafficsLights (String filePath){
         List<TrafficLightController> listControllers = new ArrayList<>();
