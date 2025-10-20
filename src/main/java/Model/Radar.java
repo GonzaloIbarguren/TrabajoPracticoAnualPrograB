@@ -23,4 +23,9 @@ public class Radar extends Device {
     public boolean detectarExcesoVelocidad(Automobile auto, int velocidadActual) {
         return velocidadActual > velocidadMaxima;
     }
+
+    @Override
+    public String getTypeDevice() {
+        return "radar";
+    }
 }

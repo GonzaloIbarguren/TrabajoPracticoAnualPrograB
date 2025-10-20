@@ -22,16 +22,17 @@ import java.util.Scanner;
 
 public class UrbanMonitoringCenter{
     private boolean running;
-    private List<Device> devices;
-    private List<TrafficLightController> controllers = loadTrafficsLights("TrafficLigths.json");
+    private List<Device> devices = loadDevice("Device.json");
+
     private MapWindows map;
     private TrafficLightWindows windows;
 
     public UrbanMonitoringCenter()  {
-        this.map = new MapWindows(controllers);
+        this.map = new MapWindows(devices);
     }
-    public List<TrafficLightController> loadTrafficsLights (String filePath){
-        List<TrafficLightController> listControllers = new ArrayList<>();
+
+    public List<Device> loadDevice (String filePath){
+        List<Device> listDevice = new ArrayList<>();
 
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream(filePath);
@@ -51,9 +52,9 @@ public class UrbanMonitoringCenter{
 
                 JSONObject lightAJson = controller.getJSONObject("semA");
                 TrafficLight lightA = new TrafficLight(
-                    lightAJson.getString("street"),
-                    lightAJson.getString("orientation"),
-                    lightAJson.getBoolean("main")
+                        lightAJson.getString("street"),
+                        lightAJson.getString("orientation"),
+                        lightAJson.getBoolean("main")
                 );
 
                 JSONObject lightBJson = controller.getJSONObject("semB");
@@ -62,16 +63,34 @@ public class UrbanMonitoringCenter{
                         lightBJson.getString("orientation"),
                         lightBJson.getBoolean("main")
                 );
-                listControllers.add(new TrafficLightController(id,lat,lng,lightA,lightB));
+                listDevice.add(new TrafficLightController(id,new GeoPosition(lat,lng),lightA,lightB));
             }
+            array = root.getJSONArray("securityCameras");
+            for (int i =0;i<array.length();i++){
+                JSONObject controller = array.getJSONObject(i);
+                String id = controller.getString("id");
+                double lat = controller.getDouble("lat");
+                double lng = controller.getDouble("lng");
+                listDevice.add(new SecurityCamera(id,new GeoPosition(lat,lng)));
 
+            }
+            array = root.getJSONArray("parkingCameras");
+            for (int i =0;i<array.length();i++){
+                JSONObject controller = array.getJSONObject(i);
+                String id = controller.getString("id");
+                double lat = controller.getDouble("lat");
+                double lng = controller.getDouble("lng");
+                int toleranceTime = controller.getInt("toleranceTime");
+                listDevice.add(new ParkingCamera(id,new GeoPosition(lat,lng),toleranceTime));
+
+            }
 
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return listControllers;
+        return listDevice;
     }
 
     public static void main(String[] arg){
