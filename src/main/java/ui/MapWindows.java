@@ -144,6 +144,34 @@ public class MapWindows extends JFrame {
                 Image img = icon.getImage();
                 g.drawImage(img, x-10, y-10, 20, 20, null);
             }
+            for (SecurityCamera securityCamera: securityCameras) {
+                Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                        securityCamera.getLocation(),
+                        mapViewer.getZoom()
+                );
+                Rectangle viewport = mapViewer.getViewportBounds();
+
+                int x = (int) (pt.getX() - viewport.getX());
+                int y = (int) (pt.getY() - viewport.getY());
+
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/SecurityCamera.png")));
+                Image img = icon.getImage();
+                g.drawImage(img, x-10, y-10, 20, 20, null);
+            }
+            for (ParkingCamera parkingCamera: parkingCameras) {
+                Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                        parkingCamera.getLocation(),
+                        mapViewer.getZoom()
+                );
+                Rectangle viewport = mapViewer.getViewportBounds();
+
+                int x = (int) (pt.getX() - viewport.getX());
+                int y = (int) (pt.getY() - viewport.getY());
+
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ParkingCamera.png")));
+                Image img = icon.getImage();
+                g.drawImage(img, x-10, y-10, 20, 20, null);
+            }
 
 
         });
