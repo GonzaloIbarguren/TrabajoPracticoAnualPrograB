@@ -28,18 +28,7 @@ public class UrbanMonitoringCenter{
     private TrafficLightWindows windows;
 
     public UrbanMonitoringCenter()  {
-        // this.devices = new ArrayList<>();
-        // this.map = new MapWindows(controllers);
-        TrafficFineDAO dao = new TrafficFineDAO();
-        Automobile a = new Automobile() ;
-      try {
-         a = dao.findAutomobileByPlate("AB123CD");
-      } catch (SQLException e) {
-          throw new RuntimeException(e);
-      }
-       System.out.println(a.getLicensePlate());
-       System.out.println(a.getOwner());
-       System.out.println(a.getModel().getName());
+        this.map = new MapWindows(controllers);
     }
     public List<TrafficLightController> loadTrafficsLights (String filePath){
         List<TrafficLightController> listControllers = new ArrayList<>();

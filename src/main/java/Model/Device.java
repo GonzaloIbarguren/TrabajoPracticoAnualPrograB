@@ -6,8 +6,7 @@ public class Device {
     private String id;
     private GeoPosition location;
 
-    public Device() {
-    }
+
 
     public Device(String id, GeoPosition location) {
         this.id = id;
