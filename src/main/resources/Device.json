@@ -240,5 +240,54 @@
         "main": false
       }
     }
+  ],
+  "securityCameras": [
+    {
+      "id": "Camera 1",
+      "lat": -38.002148,
+      "lng": -57.552695
+    },
+    {
+      "id": "Camera 2",
+      "lat": -37.998327,
+      "lng": -57.548833
+    },
+    {
+      "id": "Camera 3",
+      "lat": -38.005462,
+      "lng": -57.542782
+    },
+    {
+      "id": "Camera 4",
+      "lat": -37.997304,
+      "lng": -57.546666
+    }
+  ],
+  "parkingCameras": [
+    {
+      "id": "Parking Camera 1",
+      "lat": -37.997854,
+      "lng": -57.551215,
+      "toleranceTime": 360
+    },
+    {
+      "id": "Parking Camera 2",
+      "lat": -38.000305,
+      "lng": -57.55394,
+      "toleranceTime": 300
+    },
+    {
+      "id": "Parking Camera 3",
+      "lat": -38.002115,
+      "lng": -57.548296,
+      "toleranceTime": 420
+    },
+    {
+      "id": "Parking Camera 4",
+      "lat": -38.003095,
+      "lng": -57.546344,
+      "toleranceTime": 330
+    }
   ]
 }
+

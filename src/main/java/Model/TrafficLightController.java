@@ -22,8 +22,7 @@ public class TrafficLightController extends Device implements Runnable, Generate
     private boolean running;
     private LocalDateTime startCycle;
 
-    public TrafficLightController(String id, double latitude, double longitude, TrafficLight light1, TrafficLight light2) {
-        GeoPosition pos = new GeoPosition(latitude,longitude);
+    public TrafficLightController(String id,GeoPosition pos, TrafficLight light1, TrafficLight light2) {
         super(id,pos);
 
         this.light1 = light1;
@@ -148,4 +147,8 @@ public class TrafficLightController extends Device implements Runnable, Generate
         this.durationRed = durationRed;
     }
 
+    @Override
+    public String getTypeDevice() {
+        return "trafficLightController";
+    }
 }
