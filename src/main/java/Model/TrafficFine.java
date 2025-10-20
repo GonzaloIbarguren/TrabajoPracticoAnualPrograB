@@ -28,11 +28,11 @@ public class TrafficFine implements Serializable {
     private BigDecimal baseAmount, finalAmount;
 
     public TrafficFine(int fineNumber,int pointScoring,TypeInfraction typeInfraction, Automobile automobile, EventLocation locationEvent, BigDecimal baseAmount) {
-        this.automobile = automobile;
         this.fineNumber = fineNumber;
         this.event = locationEvent;
         this.finalAmount = baseAmount;
         this.pointScoring = pointScoring;
+        this.automobile =automobile;
         this.typeInfraction = typeInfraction;
         try {
             generatePDF();
@@ -269,6 +269,16 @@ public class TrafficFine implements Serializable {
     public int getFineNumer() {
         return fineNumber;
     }
+
+
+    public int getFineNumber() {
+        return fineNumber;
+    }
+
+    public void setFineNumber(int fineNumber) {
+        this.fineNumber = fineNumber;
+    }
+
 
     public void setFineNumer(int fineNumer) {
         this.fineNumber = fineNumer;

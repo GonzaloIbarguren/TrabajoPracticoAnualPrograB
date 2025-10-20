@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
 
-    private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
+   private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
 
     public MapWindows(List<TrafficLightController> trafficlights) {
         super("MAP");
@@ -77,7 +77,7 @@ public class MapWindows extends JFrame {
                Point2D point2D = new Point2D.Double(x, y);
                GeoPosition geo = map.getTileFactory().pixelToGeo(point2D, map.getZoom());
 
-               System.out.println(+ geo.getLatitude()+","+ geo.getLongitude());
+               //System.out.println(+ geo.getLatitude()+","+ geo.getLongitude());
 
                TrafficLightController clickedTrafficLight = null;
                double threshold = 0.0001;
@@ -113,7 +113,7 @@ public class MapWindows extends JFrame {
                 g.setColor(Color.BLACK);
                 g.drawOval(x - size / 2, y - size / 2, size, size);
             }
-            for (Radar radar : radars) {
+           for (Radar radar : radars) {
                 Point2D pt = mapViewer.getTileFactory().geoToPixel(
                         radar.getLocation(),
                         mapViewer.getZoom()
