@@ -2,17 +2,21 @@ package Model;
 
 import org.jxmapviewer.viewer.GeoPosition;
 
-public class Device {
+public abstract class Device  {
     private String id;
     private GeoPosition location;
 
-    public Device() {
-    }
+
 
     public Device(String id, GeoPosition location) {
         this.id = id;
         this.location = location;
     }
+
+    public abstract String getTypeDevice();
+
+
+
 
     public String getId() {
         return id;

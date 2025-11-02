@@ -15,24 +15,14 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class TrafficLightController extends Device implements Runnable, Serializable, GenerateFine{
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class TrafficLightController extends Device implements Runnable, GenerateFine{
     private LocalTime starTimeIntermittent, endTimeIntermittent;
     private int durationRed,durationGreen,durationYellow,durationTwoRed;
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
 
-
-
-
-    public TrafficLightController() {
-        super(null,null);
-    }
-
-    public TrafficLightController(String id, double latitude, double longitude, TrafficLight light1, TrafficLight light2) {
-        GeoPosition pos = new GeoPosition(latitude,longitude);
+    public TrafficLightController(String id,GeoPosition pos, TrafficLight light1, TrafficLight light2) {
         super(id,pos);
 
         this.light1 = light1;
@@ -157,4 +147,8 @@ public class TrafficLightController extends Device implements Runnable, Serializ
         this.durationRed = durationRed;
     }
 
+    @Override
+    public String getTypeDevice() {
+        return "trafficLightController";
+    }
 }

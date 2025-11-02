@@ -8,15 +8,12 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 
 
-import java.awt.geom.AffineTransform;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
@@ -25,13 +22,33 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
-
+    private List<TrafficLightController> controllers;
+    private List<SecurityCamera>  securityCameras;
+    private List<ParkingCamera> parkingCameras;
    private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
 
-    public MapWindows(List<TrafficLightController> trafficlights) {
+    public MapWindows(List<Device> deviceList) {
         super("MAP");
         setSize(600, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        List<TrafficLightController> lightsControllers = new ArrayList<>();
+        List<SecurityCamera>  securityCameras = new ArrayList<>();
+        List<ParkingCamera> parkingCameras = new ArrayList<>();
+
+        for (Device d : deviceList) {
+            switch (d.getTypeDevice()) {
+                case "trafficLightController":
+                    lightsControllers.add((TrafficLightController) d);
+                    break;
+                case "securityCamera":
+                    securityCameras.add((SecurityCamera) d);
+                    break;
+                case "parkingCamera":
+                    parkingCameras.add((ParkingCamera) d);
+                    break;
+            }
+        }
 
 
         JXMapViewer map = new JXMapViewer();
@@ -81,7 +98,7 @@ public class MapWindows extends JFrame {
 
                TrafficLightController clickedTrafficLight = null;
                double threshold = 0.0001;
-                for (TrafficLightController controller : trafficlights){
+                for (TrafficLightController controller : lightsControllers){
                     double dx = Math.abs(controller.getLocation().getLatitude() - geo.getLatitude());
                     double dy = Math.abs(controller.getLocation().getLongitude() - geo.getLongitude());
 
@@ -98,7 +115,7 @@ public class MapWindows extends JFrame {
 
 
         map.setOverlayPainter((g, mapViewer, width, height) -> {
-            for (TrafficLightController controller : trafficlights) {
+            for (TrafficLightController controller : lightsControllers) {
                 GeoPosition pos = controller.getLocation();
                 Color color = controller.getLightMain().getState();
                 Point2D worldPt = mapViewer.getTileFactory().geoToPixel(pos, mapViewer.getZoom());
@@ -127,6 +144,34 @@ public class MapWindows extends JFrame {
                 Image img = icon.getImage();
                 g.drawImage(img, x-10, y-10, 20, 20, null);
             }
+            for (SecurityCamera securityCamera: securityCameras) {
+                Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                        securityCamera.getLocation(),
+                        mapViewer.getZoom()
+                );
+                Rectangle viewport = mapViewer.getViewportBounds();
+
+                int x = (int) (pt.getX() - viewport.getX());
+                int y = (int) (pt.getY() - viewport.getY());
+
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/SecurityCamera.png")));
+                Image img = icon.getImage();
+                g.drawImage(img, x-10, y-10, 20, 20, null);
+            }
+            for (ParkingCamera parkingCamera: parkingCameras) {
+                Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                        parkingCamera.getLocation(),
+                        mapViewer.getZoom()
+                );
+                Rectangle viewport = mapViewer.getViewportBounds();
+
+                int x = (int) (pt.getX() - viewport.getX());
+                int y = (int) (pt.getY() - viewport.getY());
+
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ParkingCamera.png")));
+                Image img = icon.getImage();
+                g.drawImage(img, x-10, y-10, 20, 20, null);
+            }
 
 
         });
@@ -135,7 +180,7 @@ public class MapWindows extends JFrame {
         startUpdating();
 
 
-       for (TrafficLightController controller : trafficlights) {
+       for (TrafficLightController controller : lightsControllers) {
 
             try {
                 Thread.sleep(5000);

@@ -4,16 +4,11 @@ import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class TrafficLight implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class TrafficLight {
     private Orientation orientation;
     private String street;
     private boolean main;
     private Color state;
-
-    public TrafficLight() {
-    }
 
     public TrafficLight(String street, String orientation, Boolean main) {
         this.street = street;
