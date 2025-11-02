@@ -32,7 +32,7 @@ public class TrafficLightWindows extends JFrame {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
                 int size = 40;
                 int xMain, xSec, yMain, ySec;
-                if (controller.getLightMain().getDireccion() == Orientation.SOUTH || controller.getLightMain().getDireccion() == Orientation.NORTH || controller.getLightMain().getDireccion() == Orientation.NORTH_SOUTH) {
+                if (controller.getLightMain().getOrientation() == Orientation.SOUTH || controller.getLightMain().getOrientation() == Orientation.NORTH || controller.getLightMain().getOrientation() == Orientation.NORTH_SOUTH) {
                     xMain = (int) (getWidth() * 0.487) - size / 2;
                     yMain = (int) (getHeight() * 0.3) - size / 2;
                     xSec = (int) (getWidth() * 0.65) - size / 2;
@@ -64,8 +64,8 @@ public class TrafficLightWindows extends JFrame {
 
                 int arrowSize = fontSize;
                 Graphics2D g2 = (Graphics2D) g;
-                drawArrow(g2, textX + fontSize * 6, textY1 - fontSize / 2, arrowSize, controller.getLightMain().getDireccion());
-                drawArrow(g2, textX + fontSize * 6, textY2 - fontSize / 2, arrowSize, controller.getLightSecundary().getDireccion());
+                drawArrow(g2, textX + fontSize * 6, textY1 - fontSize / 2, arrowSize, controller.getLightMain().getOrientation());
+                drawArrow(g2, textX + fontSize * 6, textY2 - fontSize / 2, arrowSize, controller.getLightSecundary().getOrientation());
 
             }
             private void drawArrow(Graphics2D g2, int x, int y, int size, Orientation dir) {

@@ -1,11 +1,17 @@
 package Model;
 
+import dataBase.DataBaseConnection;
+import dataBase.TrafficFineDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
 import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -14,7 +20,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     private static final long serialVersionUID = 1L;
     private LocalTime starTimeIntermittent, endTimeIntermittent;
     private int durationRed,durationGreen,durationYellow,durationTwoRed;
-    private GeoPosition location;
     private TrafficLight light1,light2;
     private boolean running;
     private LocalDateTime startCycle;
@@ -23,16 +28,20 @@ public class TrafficLightController extends Device implements Runnable, Serializ
 
 
     public TrafficLightController() {
-        this.durationGreen = 40000;
-        this.durationYellow = 4000;
-        this.durationTwoRed = 3000;
-        this.durationRed = 30000;
-        this.startCycle = LocalDateTime.now();
-        light1 = new TrafficLight();
-        light2 = new TrafficLight();
-        light1.setState(Color.GREEN);
-        light2.setState(Color.RED);
-        light1.setMain(true);
+        super(null,null);
+    }
+
+    public TrafficLightController(String id, double latitude, double longitude, TrafficLight light1, TrafficLight light2) {
+        GeoPosition pos = new GeoPosition(latitude,longitude);
+        super(id,pos);
+
+        this.light1 = light1;
+        this.light2 = light2;
+
+        durationGreen = 40000;
+        durationYellow = 4000;
+        durationTwoRed = 3000;
+        durationRed = 30000;
     }
 
     @Override
@@ -54,10 +63,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
     }
     @Override
     public void fineGenerate() {
-        // TypeInfraction typeInfraction = new TypeInfraction(TypesInfraction.RED_LIGHT,1000,1);
-        //Automobile automobile = new Automobile("AB098AA","Martin Perez","address");
-        //EventLocation eventLocation = new EventLocation(1,LocalDateTime.now(),light1.getStreet() + " y "+light2.getStreet());
-        //TrafficFine Fine = new TrafficFine(1,1,typeInfraction,automobile,eventLocation,1000);
 
     }
 
@@ -111,14 +116,6 @@ public class TrafficLightController extends Device implements Runnable, Serializ
 
     public void stop(){
         this.running = false;}
-
-    public GeoPosition getLocation() {
-        return location;
-    }
-
-    public void setLocation(GeoPosition location) {
-        this.location = location;
-    }
 
     public void changeMainLight(){
             if (light1.getMain()) {
