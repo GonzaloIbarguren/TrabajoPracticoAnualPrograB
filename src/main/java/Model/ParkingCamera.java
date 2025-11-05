@@ -26,4 +26,16 @@ public class ParkingCamera extends Device implements GenerateFine{
     public String getTypeDevice() {
         return "parkingCamera";
     }
+
+
+
+    @Override
+    public void SimulateError() {
+
+    }
+
+    @Override
+    public void FixError() {
+
+    }
 }
