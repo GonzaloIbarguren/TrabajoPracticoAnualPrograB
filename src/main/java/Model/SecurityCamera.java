@@ -13,4 +13,14 @@ public class SecurityCamera extends Device{
     public String getTypeDevice() {
         return "securityCamera";
     }
+
+    @Override
+    public void SimulateError() {
+
+    }
+
+    @Override
+    public void FixError() {
+
+    }
 }

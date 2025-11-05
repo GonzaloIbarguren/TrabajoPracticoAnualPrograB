@@ -1,26 +1,18 @@
 package Model;
 
-import dataBase.DataBaseConnection;
-import dataBase.TrafficFineDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
-import java.io.File;
-import java.io.Serial;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
+
 import java.time.LocalTime;
+import java.util.Random;
+
 
 public class TrafficLightController extends Device implements Runnable, GenerateFine{
     private LocalTime starTimeIntermittent, endTimeIntermittent;
     private int durationRed,durationGreen,durationYellow,durationTwoRed;
     private TrafficLight light1,light2;
-    private boolean running;
-    private LocalDateTime startCycle;
+    private boolean running,intermittent;
 
     public TrafficLightController(String id,GeoPosition pos, TrafficLight light1, TrafficLight light2) {
         super(id,pos);
@@ -40,7 +32,8 @@ public class TrafficLightController extends Device implements Runnable, Generate
         running = true;
         while (running) {
             try {
-                    if (isIntermittentTime()){
+                isIntermittentTime();
+                    if (intermittent){
                         RunIntermittentMode();
                     }else{
                         RunNormalCycle();
@@ -49,24 +42,52 @@ public class TrafficLightController extends Device implements Runnable, Generate
                     System.out.println("Traffic Ligth error");
                     running = false;
                 }
+            SimulateError();
             }
     }
     @Override
     public void fineGenerate() {
 
     }
+    @Override
+    public void SimulateError() {
+        Random random = new Random();
+        if (getState() == State.OPERATIONAL && random.nextDouble() < 0.50) {
+            int type = random.nextInt(TypesErrors.values().length - 1) + 1;
+            setTypeError(TypesErrors.values()[type]);
+            setState(State.FAILURE);
+            System.err.println("⚠️ Traffic light " + getId() + " failed: " + getTypeError());
+            light1.setState(Color.MAGENTA);
+            light2.setState(Color.MAGENTA);
+            running = false;
+        }
+    }
 
+    @Override
+    public void FixError() {
+        if (getState() == State.FAILURE) {
+            System.err.println("👷‍♂️ Rebooting camera " + getId() + "...");
+            setTypeError(TypesErrors.NONE);
+            setState(State.OPERATIONAL);
+            System.err.println("✅ Camera " + getId() + " restored successfully.");
+            running = true;
+            intermittent = true;
+            run();
+
+        }
+    }
 
 
 
     private Boolean isIntermittentTime(){
         if (starTimeIntermittent == null || endTimeIntermittent == null) return false;
         LocalTime now = LocalTime.now();
-        return(now.isAfter(starTimeIntermittent) && now.isBefore(endTimeIntermittent));
+        intermittent = now.isAfter(starTimeIntermittent) && now.isBefore(endTimeIntermittent);
+        return intermittent;
     }
-    private void RunIntermittentMode() throws  InterruptedException{
+    public void RunIntermittentMode() throws InterruptedException {
         System.out.println("Intermitencia");
-        while (running && isIntermittentTime()){
+        if (running){
             light1.setState(Color.YELLOW);
             light2.setState(Color.YELLOW);
             Thread.sleep(2000);
@@ -78,25 +99,29 @@ public class TrafficLightController extends Device implements Runnable, Generate
     }
 
     public void RunNormalCycle() throws InterruptedException{
-                    light2.setState(Color.RED);
-                    light1.setState(Color.GREEN);
-                    System.out.println("verde");
-                    Thread.sleep(durationGreen);
-                    System.out.println("amarillo");
-                    light1.nextState();
-                    Thread.sleep(durationYellow);
-                    light1.nextState();
-                    System.out.println("doble rojo");
-                    Thread.sleep(durationTwoRed);
-                    light2.nextState();
-                    System.out.println("Rojo");
-                    Thread.sleep(durationRed);
-                    light2.nextState();
-                    System.out.println("sec amarillo");
-                    Thread.sleep(durationYellow);
-                    light2.nextState();
-                    System.out.println("doble rojos");
-                    Thread.sleep(durationTwoRed);
+        if (running) {
+            light2.setState(Color.RED);
+            light1.setState(Color.GREEN);
+            System.out.println("verde");
+            Thread.sleep(durationGreen);
+            System.out.println("amarillo");
+            light1.nextState();
+            Thread.sleep(durationYellow);
+            light1.nextState();
+            System.out.println("doble rojo");
+            Thread.sleep(durationTwoRed);
+            light2.nextState();
+            System.out.println("Rojo");
+            Thread.sleep(durationRed);
+            light2.nextState();
+            System.out.println("sec amarillo");
+            Thread.sleep(durationYellow);
+            light2.nextState();
+            System.out.println("doble rojos");
+            Thread.sleep(durationTwoRed);
+        }
+
+
 
     }
     public void setIntermittentTime(LocalTime start,LocalTime end){
@@ -151,4 +176,6 @@ public class TrafficLightController extends Device implements Runnable, Generate
     public String getTypeDevice() {
         return "trafficLightController";
     }
+
+
 }
