@@ -31,6 +31,14 @@ public class UrbanMonitoringCenter{
         this.map = new MapWindows(devices);
     }
 
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
+
     public List<Device> loadDevice (String filePath){
         List<Device> listDevice = new ArrayList<>();
 
@@ -82,7 +90,16 @@ public class UrbanMonitoringCenter{
                 double lng = controller.getDouble("lng");
                 int toleranceTime = controller.getInt("toleranceTime");
                 listDevice.add(new ParkingCamera(id,new GeoPosition(lat,lng),toleranceTime));
+            }
 
+            array = root.getJSONArray("radars");
+            for (int i =0;i<array.length();i++){
+                JSONObject controller = array.getJSONObject(i);
+                String id = controller.getString("id");
+                double lat = controller.getDouble("lat");
+                double lng = controller.getDouble("lng");
+                int maximumVelocity = controller.getInt("maximumVelocity");
+                listDevice.add(new Radar(id,new GeoPosition(lat,lng),maximumVelocity));
             }
 
 

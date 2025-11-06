@@ -1,6 +1,6 @@
 package Model;
 
 public enum TypesInfraction {
-    RED_LIGHT;
-    SPEEDING;
+    RED_LIGHT,
+    SPEEDING,
 }

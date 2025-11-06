@@ -2,6 +2,9 @@ package Model;
 
 import org.jxmapviewer.viewer.GeoPosition;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public abstract class Device  {
     private String id;
     private GeoPosition location;
@@ -19,6 +22,23 @@ public abstract class Device  {
     public abstract void SimulateError();
 
     public abstract void FixError();
+
+    public String generateRandomLicensePlate(){
+        final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder plate = new StringBuilder();
+
+        java.util.function.Supplier<Character> getRandomLetter = () -> letters.charAt(random.nextInt(letters.length()));
+
+        plate.append(getRandomLetter.get()).append(getRandomLetter.get());
+
+        int numbers = ThreadLocalRandom.current().nextInt(100, 1000);
+        plate.append(numbers);
+
+        plate.append(getRandomLetter.get()).append(getRandomLetter.get());
+
+        return plate.toString();
+    }
 
 
     public TypesErrors getTypeError() {
