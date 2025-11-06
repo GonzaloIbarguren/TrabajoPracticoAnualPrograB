@@ -104,10 +104,26 @@ public class TrafficLightWindows extends JFrame {
                 g2.fillPolygon(arrow);
             }
         };
+        JButton fixButton = new JButton("Fix Device");
+        fixButton.setFont(new Font("Arial",Font.BOLD,14));
+        fixButton.setBackground(Color.BLACK);
+        fixButton.setForeground(Color.WHITE);
+        fixButton.setFocusPainted(false);
+        fixButton.addActionListener(e -> {
+            controller.FixError();
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBackground(Color.DARK_GRAY);
+        bottomPanel.add(fixButton);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
 
         timer = new Timer(500, e -> panel.repaint());
         timer.start();
         add(panel);
+        add(bottomPanel, BorderLayout.SOUTH);
         setVisible(true);
     }
 

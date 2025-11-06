@@ -28,4 +28,14 @@ public class Radar extends Device {
     public String getTypeDevice() {
         return "radar";
     }
+
+    @Override
+    public void SimulateError() {
+
+    }
+
+    @Override
+    public void FixError() {
+
+    }
 }
