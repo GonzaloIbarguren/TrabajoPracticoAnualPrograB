@@ -288,6 +288,43 @@
       "lng": -57.546344,
       "toleranceTime": 330
     }
+  ],
+  "radars": [
+    {
+      "id": "Radar 1",
+      "lat": -37.991309,
+      "lng": -57.54526,
+      "status": "READY",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 2",
+      "lat": -38.034774,
+      "lng": -57.537503,
+      "status": "READY",
+      "maximumVelocity": 70
+    },
+    {
+      "id": "Radar 3",
+      "lat": -38.034132,
+      "lng": -57.541151,
+      "status": "ERROR",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 4",
+      "lat": -37.995157,
+      "lng": -57.553028,
+      "status": "READY",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 5",
+      "lat": -37.998851,
+      "lng": -57.545764,
+      "status": "ERROR",
+      "maximumVelocity": 60
+    }
   ]
 }
 
