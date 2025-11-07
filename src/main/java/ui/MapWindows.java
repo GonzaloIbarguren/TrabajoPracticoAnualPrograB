@@ -19,7 +19,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
     private List<TrafficLightController> lightsControllers;
@@ -241,9 +240,7 @@ public class MapWindows extends JFrame {
                 }
             }
 
-            // Lógica para Cámaras (Security y Parking)
             if (showCameras) {
-                // Cámaras de Seguridad
                 for (SecurityCamera securityCamera: securityCameras) {
                     Point2D pt = mapViewer.getTileFactory().geoToPixel(
                             securityCamera.getLocation(),
@@ -259,7 +256,6 @@ public class MapWindows extends JFrame {
                     g.drawImage(img, x-10, y-10, 20, 20, null);
                 }
 
-                // Cámaras de Estacionamiento
                 for (ParkingCamera parkingCamera: parkingCameras) {
                     Point2D pt = mapViewer.getTileFactory().geoToPixel(
                             parkingCamera.getLocation(),

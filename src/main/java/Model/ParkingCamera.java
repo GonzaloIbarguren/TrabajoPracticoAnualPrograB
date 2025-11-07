@@ -1,11 +1,8 @@
 package Model;
 
 import org.jxmapviewer.viewer.GeoPosition;
-
-import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -41,14 +38,12 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
                     checkInfraction();
                     simulateEntry();
                 }
-
             } catch (InterruptedException e) {
                 System.out.println("Parking camera failure.");
                 running = false;
             }
             SimulateError();
         }
-
     }
 
     @Override

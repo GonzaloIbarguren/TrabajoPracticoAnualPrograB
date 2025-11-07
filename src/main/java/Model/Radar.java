@@ -5,12 +5,12 @@ import org.jxmapviewer.viewer.GeoPosition;
 import java.util.Random;
 
 public class Radar extends Device implements Runnable, GenerateFine{
-    private int velocidadMaxima;
+    private int maximumVelocity;
     private boolean running;
 
-    public Radar(String id, GeoPosition location, int velocidadMaxima) {
+    public Radar(String id, GeoPosition location, int maximumVelocity) {
         super(id, location);
-        this.velocidadMaxima = velocidadMaxima;
+        this.maximumVelocity = maximumVelocity;
     }
 
     @Override
@@ -33,18 +33,13 @@ public class Radar extends Device implements Runnable, GenerateFine{
         }
     }
 
-    public int getVelocidadMaxima() {
-        return velocidadMaxima;
+    public int getMaximumVelocity() {
+        return maximumVelocity;
     }
 
-    public void setVelocidadMaxima(int velocidadMaxima) {
-        this.velocidadMaxima = velocidadMaxima;
+    public void setMaximumVelocity(int maximumVelocity) {
+        this.maximumVelocity = maximumVelocity;
     }
-
-
-    /*public boolean detectarExcesoVelocidad(Automobile auto, int velocidadActual) {
-        return velocidadActual > velocidadMaxima;
-    }*/
 
     @Override
     public String getTypeDevice() {
@@ -57,7 +52,7 @@ public class Radar extends Device implements Runnable, GenerateFine{
         if (random.nextDouble() < 0.2){
             int simulatedVelocity = random.nextInt(0, 450);
 
-            if (simulatedVelocity > getVelocidadMaxima()){
+            if (simulatedVelocity > getMaximumVelocity()){
                 String licensePlate = generateRandomLicensePlate();
                 fineGenerate();
             }

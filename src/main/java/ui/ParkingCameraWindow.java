@@ -34,7 +34,7 @@ public class ParkingCameraWindow extends JFrame {
                 if (parkingImage != null) {
                     g.drawImage(parkingImage, 0, 0, getWidth(), getHeight(), this);
 
-                    g.setColor(Color.GREEN.darker()); // Color verde para indicar vigilancia normal
+                    g.setColor(Color.GREEN.darker());
                     g.fillOval(getWidth() - 30, 10, 20, 20);
                     g.setFont(new Font("Arial", Font.BOLD, 14));
                     g.drawString("PARKING LIVE", getWidth() - 110, 25);

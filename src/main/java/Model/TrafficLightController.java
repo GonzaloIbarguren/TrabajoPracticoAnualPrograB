@@ -1,12 +1,9 @@
 package Model;
 
 import org.jxmapviewer.viewer.GeoPosition;
-
 import java.awt.*;
-
 import java.time.LocalTime;
 import java.util.Random;
-
 
 public class TrafficLightController extends Device implements Runnable, GenerateFine{
     private LocalTime starTimeIntermittent, endTimeIntermittent;

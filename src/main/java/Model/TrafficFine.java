@@ -42,12 +42,8 @@ public class TrafficFine implements Serializable {
     }
 
     private void generatePDF() throws IOException {
-
-
-        // Nombre del archivo con número correlativo
         String fileName = String.format("fines/fine_%06d.pdf", fineNumber);
 
-        // Crear documento
         PDDocument doc = new PDDocument();
         PDPage page = new PDPage();
         doc.addPage(page);
@@ -58,7 +54,6 @@ public class TrafficFine implements Serializable {
 
         content.addRect(50, 745, 500, 30); //
         content.stroke();
-
 
         content.beginText();
         content.setFont(PDType1Font.HELVETICA_BOLD, 20);
@@ -74,7 +69,6 @@ public class TrafficFine implements Serializable {
         content.setFont(PDType1Font.HELVETICA, 12);
         content.showText(""+ fineNumber);
         content.endText();
-
 
         content.beginText();
         content.setFont(PDType1Font.HELVETICA_BOLD, 16);
@@ -124,7 +118,6 @@ public class TrafficFine implements Serializable {
         content.showText(event.getAddress());
         content.endText();
 
-
         content.beginText();
         content.newLineAtOffset(60, 595);
         content.setFont(PDType1Font.HELVETICA_BOLD, 16);
@@ -133,7 +126,6 @@ public class TrafficFine implements Serializable {
 
         content.addRect(65, 580, 500, -75); //
         content.stroke();
-
 
         content.beginText();
         content.newLineAtOffset(70, 565);
@@ -149,7 +141,6 @@ public class TrafficFine implements Serializable {
 
         PDImageXObject image = PDImageXObject.createFromByteArray(doc, getClass().getResourceAsStream("/Cruce_rojo.jpg").readAllBytes(),"red");
         content.drawImage(image,70,250,200,200);
-
 
         content.beginText();
         content.newLineAtOffset(60,220 );
@@ -169,8 +160,6 @@ public class TrafficFine implements Serializable {
         content.showText("$"+finalAmount);
         content.endText();
 
-
-
         String barcodeString = buildBarcodeString(fineNumber,finalAmount);
         BufferedImage barcodeImg = generateBarcodeImage(barcodeString,400,60);
 
@@ -181,8 +170,6 @@ public class TrafficFine implements Serializable {
 
         content.close();
 
-
-        // Guardar en carpeta
         doc.save(fileName);
         doc.close();
 
@@ -210,13 +197,6 @@ public class TrafficFine implements Serializable {
             throw new RuntimeException("Error generating barcode", e);
         }
     }
-
-
-
-
-
-
-
 
     public BigDecimal getFinalAmount() {
         return finalAmount;
@@ -270,7 +250,6 @@ public class TrafficFine implements Serializable {
         return fineNumber;
     }
 
-
     public int getFineNumber() {
         return fineNumber;
     }
@@ -278,7 +257,6 @@ public class TrafficFine implements Serializable {
     public void setFineNumber(int fineNumber) {
         this.fineNumber = fineNumber;
     }
-
 
     public void setFineNumer(int fineNumer) {
         this.fineNumber = fineNumer;

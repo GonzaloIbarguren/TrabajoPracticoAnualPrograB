@@ -5,6 +5,8 @@ import Model.AutomobileModel;
 import Model.TrafficFine;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrafficFineDAO {
 
@@ -32,8 +34,23 @@ public class TrafficFineDAO {
 
     }
 
+    public List<String> findAllLicensePlates() throws SQLException {
+        List<String> plates = new ArrayList<>();
+        String sql = "SELECT licenseplate FROM automobiles";
 
+        try (Connection conn = DataBaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
+            while (rs.next()) {
+                plates.add(rs.getString("licenseplate"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Fail to obtain all license plates from database: " + e.getMessage());
+        }
+        return plates;
+    }
 
 
     public Automobile findAutomobileByPlate(String plate) throws SQLException {

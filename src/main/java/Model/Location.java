@@ -1,7 +1,6 @@
 package Model;
 
 public class Location {
-
     private double latitud;
     private double longitud;
 
@@ -28,6 +27,4 @@ public class Location {
     public void setLongitud(double longitud) {
         this.longitud = longitud;
     }
-
-
 }

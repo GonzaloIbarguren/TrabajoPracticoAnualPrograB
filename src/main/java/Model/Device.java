@@ -1,7 +1,6 @@
 package Model;
 
 import org.jxmapviewer.viewer.GeoPosition;
-
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -80,5 +79,4 @@ public abstract class Device  {
     public void setLocation(GeoPosition location) {
         this.location = location;
     }
-
 }
