@@ -172,6 +172,14 @@ public class TrafficLightController extends Device implements Runnable, Generate
         this.durationRed = durationRed;
     }
 
+    public boolean getIntermittent() {
+        return intermittent;
+    }
+
+    public void setIntermittent(boolean intermittent) {
+        this.intermittent = intermittent;
+    }
+
     @Override
     public String getTypeDevice() {
         return "trafficLightController";
