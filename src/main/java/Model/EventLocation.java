@@ -1,18 +1,19 @@
 package Model;
 
+import org.jxmapviewer.viewer.GeoPosition;
+
 import java.time.LocalDateTime;
 
 public class EventLocation {
-        private int id;
         private LocalDateTime dateTime;
         private String address;
-        private Location location;
+        private GeoPosition location;
         private Device device;
         
-        public EventLocation(int id, LocalDateTime dateTime,String address){
+        public EventLocation(LocalDateTime dateTime,String address,GeoPosition location){
                 this.address = address;
-                this.id = id;
                 this.dateTime = dateTime;
+                this.location = location;
         }
 
         public String getAddress() {
@@ -31,11 +32,4 @@ public class EventLocation {
                 this.dateTime = dateTime;
         }
 
-        public int getId() {
-                return id;
-        }
-
-        public void setId(int id) {
-                this.id = id;
-        }
 }
