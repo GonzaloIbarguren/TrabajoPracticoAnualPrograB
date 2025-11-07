@@ -87,12 +87,12 @@ public class Radar extends Device implements Runnable, GenerateFine{
     public void FixError() {
 
         if (getState() == State.FAILURE) {
-            System.err.println("👷‍♂️ Rebooting Parking Camera " + getId() + "...");
+            System.err.println("Rebooting Radar " + getId() + "...");
 
             setTypeError(TypesErrors.NONE);
             setState(State.OPERATIONAL);
 
-            System.err.println("Parking Camera " + getId() + " restored successfully.");
+            System.err.println("Radar " + getId() + " restored successfully.");
 
             running = true;
             run();
