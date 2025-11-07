@@ -40,10 +40,8 @@ public class TrafficFine implements Serializable {
     private void generatePDF() throws IOException {
 
 
-        // Nombre del archivo con número correlativo
         String fileName = String.format("fines/fine_%06d.pdf", fineNumber);
 
-        // Crear documento
         PDDocument doc = new PDDocument();
         PDPage page = new PDPage();
         doc.addPage(page);
@@ -178,7 +176,6 @@ public class TrafficFine implements Serializable {
         content.close();
 
 
-        // Guardar en carpeta
         doc.save(fileName);
         doc.close();
 

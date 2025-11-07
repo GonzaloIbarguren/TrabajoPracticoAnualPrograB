@@ -268,7 +268,7 @@ public class ReportsWindows extends JFrame {
             }
 
         } catch (SQLException e) {
-            report.append("⚠Error loading fines for plate ").append(plate)
+            report.append("Error loading fines for plate ").append(plate)
                     .append(": ").append(e.getMessage());
             e.printStackTrace();
         }

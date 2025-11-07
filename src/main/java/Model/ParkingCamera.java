@@ -131,7 +131,7 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
             setState(State.FAILURE);
 
-            System.err.println("⚠️ Parking camera " + getId() + " failed: " + getTypeError());
+            System.err.println("Parking camera " + getId() + " failed: " + getTypeError());
 
             running = false;
         }
@@ -142,13 +142,13 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
         if (getState() == State.FAILURE) {
 
-            System.err.println("👷‍♂️ Rebooting Parking Camera " + getId() + "...");
+            System.err.println("Rebooting Parking Camera " + getId() + "...");
 
             setTypeError(TypesErrors.NONE);
 
             setState(State.OPERATIONAL);
 
-            System.err.println("✅ Parking Camera " + getId() + " restored successfully.");
+            System.err.println("Parking Camera " + getId() + " restored successfully.");
 
             running = true;
 
