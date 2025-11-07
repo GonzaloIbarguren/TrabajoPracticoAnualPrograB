@@ -113,6 +113,14 @@ public class MapWindows extends JFrame {
                 if (clickedTrafficLight !=null){
                     new  TrafficLightWindows(clickedTrafficLight);
                 }
+               for (SecurityCamera camera : securityCameras) {
+                   double dx = Math.abs(camera.getLocation().getLatitude() - geo.getLatitude());
+                   double dy = Math.abs(camera.getLocation().getLongitude() - geo.getLongitude());
+
+                   if (dx < threshold && dy < threshold) {
+                       new SecurityCameraWindow(camera.getId());
+                   }
+               }
            }
        });
 
