@@ -108,7 +108,7 @@ public class MapWindows extends JFrame {
                //System.out.println(+ geo.getLatitude()+","+ geo.getLongitude());
 
                TrafficLightController clickedTrafficLight = null;
-               double threshold = 0.0001;
+               double threshold = 0.0002;
                 for (TrafficLightController controller : lightsControllers){
                     double dx = Math.abs(controller.getLocation().getLatitude() - geo.getLatitude());
                     double dy = Math.abs(controller.getLocation().getLongitude() - geo.getLongitude());
@@ -120,6 +120,22 @@ public class MapWindows extends JFrame {
                 if (clickedTrafficLight !=null){
                     new  TrafficLightWindows(clickedTrafficLight);
                 }
+               for (SecurityCamera camera : securityCameras) {
+                   double dx = Math.abs(camera.getLocation().getLatitude() - geo.getLatitude());
+                   double dy = Math.abs(camera.getLocation().getLongitude() - geo.getLongitude());
+
+                   if (dx < threshold && dy < threshold) {
+                       new SecurityCameraWindow(camera.getId());
+                   }
+               }
+               for (ParkingCamera camera : parkingCameras) {
+                   double dx = Math.abs(camera.getLocation().getLatitude() - geo.getLatitude());
+                   double dy = Math.abs(camera.getLocation().getLongitude() - geo.getLongitude());
+
+                   if (dx < threshold && dy < threshold) {
+                       new ParkingCameraWindow(camera.getId());
+                   }
+               }
            }
        });
 
