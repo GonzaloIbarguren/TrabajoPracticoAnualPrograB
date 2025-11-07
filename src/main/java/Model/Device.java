@@ -10,6 +10,7 @@ public abstract class Device  {
     private GeoPosition location;
     private State state;
     private TypesErrors typeError;
+    private TypeInfraction typeInfraction;
 
     public Device(String id, GeoPosition location) {
         this.id = id;
@@ -40,6 +41,13 @@ public abstract class Device  {
         return plate.toString();
     }
 
+    public TypeInfraction getTypeInfraction() {
+        return typeInfraction;
+    }
+
+    public void setTypeInfraction(TypeInfraction typeInfraction) {
+        this.typeInfraction = typeInfraction;
+    }
 
     public TypesErrors getTypeError() {
         return typeError;

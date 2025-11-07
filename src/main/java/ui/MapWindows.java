@@ -25,7 +25,8 @@ public class MapWindows extends JFrame {
     private List<TrafficLightController> controllers;
     private List<SecurityCamera>  securityCameras;
     private List<ParkingCamera> parkingCameras;
-   private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
+    private List<Radar> radars;
+    //private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
 
     public MapWindows(List<Device> deviceList) {
         super("MAP");
@@ -35,6 +36,7 @@ public class MapWindows extends JFrame {
         List<TrafficLightController> lightsControllers = new ArrayList<>();
         List<SecurityCamera>  securityCameras = new ArrayList<>();
         List<ParkingCamera> parkingCameras = new ArrayList<>();
+        List<Radar> radars = new ArrayList<>();
 
         for (Device d : deviceList) {
             switch (d.getTypeDevice()) {
@@ -47,6 +49,8 @@ public class MapWindows extends JFrame {
                 case "parkingCamera":
                     parkingCameras.add((ParkingCamera) d);
                     break;
+                case "radar":
+                    radars.add((Radar) d);
             }
         }
 
@@ -189,6 +193,24 @@ public class MapWindows extends JFrame {
             }
             new Thread(controller).start();
 
+        }
+
+        for (ParkingCamera controller : parkingCameras){
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new Thread(controller).start();
+        }
+
+        for (Radar controller : radars){
+            try{
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new Thread(controller).start();
         }
     }
 

@@ -34,15 +34,14 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
         while (running) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
 
                 if (getState() == State.OPERATIONAL){
                     simulateExit();
-
                     checkInfraction();
-
                     simulateEntry();
                 }
+
             } catch (InterruptedException e) {
                 System.out.println("Parking camera failure.");
                 running = false;
@@ -118,7 +117,7 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
     public void SimulateError() {
         Random random = new Random();
 
-        if (getState() == State.OPERATIONAL && random.nextDouble() < 0.40) {
+        if (getState() == State.OPERATIONAL && random.nextDouble() < 0.4) {
             int type = random.nextInt(TypesErrors.values().length - 1) + 1;
 
             setTypeError(TypesErrors.values()[type]);
@@ -136,13 +135,13 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
         if (getState() == State.FAILURE) {
 
-            System.err.println("👷‍♂️ Rebooting camera " + getId() + "...");
+            System.err.println("👷‍♂️ Rebooting Parking Camera " + getId() + "...");
 
             setTypeError(TypesErrors.NONE);
 
             setState(State.OPERATIONAL);
 
-            System.err.println("✅ Camera " + getId() + " restored successfully.");
+            System.err.println("✅ Parking Camera " + getId() + " restored successfully.");
 
             running = true;
 

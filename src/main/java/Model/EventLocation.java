@@ -6,6 +6,8 @@ public class EventLocation {
         private int id;
         private LocalDateTime dateTime;
         private String address;
+        private Location location;
+        private Device device;
         
         public EventLocation(int id, LocalDateTime dateTime,String address){
                 this.address = address;

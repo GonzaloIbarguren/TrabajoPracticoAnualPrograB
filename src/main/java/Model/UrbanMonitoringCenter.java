@@ -23,7 +23,6 @@ import java.util.Scanner;
 public class UrbanMonitoringCenter{
     private boolean running;
     private List<Device> devices = loadDevice("Device.json");
-
     private MapWindows map;
     private TrafficLightWindows windows;
 
