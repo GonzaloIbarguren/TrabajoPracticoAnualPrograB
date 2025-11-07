@@ -44,9 +44,6 @@ public class Radar extends Device implements Runnable, GenerateFine{
     }
 
 
-    /*public boolean detectarExcesoVelocidad(Automobile auto, int velocidadActual) {
-        return velocidadActual > velocidadMaxima;
-    }*/
 
     @Override
     public String getTypeDevice() {
@@ -77,7 +74,7 @@ public class Radar extends Device implements Runnable, GenerateFine{
             int type = random.nextInt(TypesErrors.values().length - 1) + 1;
             setTypeError(TypesErrors.values()[type]);
             setState(State.FAILURE);
-            System.err.println("⚠️ Radar " + getId() + " failure: " + getTypeError());
+            System.err.println("Radar " + getId() + " failure: " + getTypeError());
             running = false;
         }
     }
@@ -95,7 +92,7 @@ public class Radar extends Device implements Runnable, GenerateFine{
             setTypeError(TypesErrors.NONE);
             setState(State.OPERATIONAL);
 
-            System.err.println("✅ Parking Camera " + getId() + " restored successfully.");
+            System.err.println("Parking Camera " + getId() + " restored successfully.");
 
             running = true;
             run();

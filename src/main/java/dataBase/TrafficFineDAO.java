@@ -31,11 +31,11 @@ public class TrafficFineDAO {
                 fine.setFineNumber(rs.getInt("fine_number"));
             }
 
-            System.out.println("✅ Fine registered successfully! Fine number: " + fine.getFineNumber());
+            System.out.println("Fine registered successfully! Fine number: " + fine.getFineNumber());
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.err.println("❌ Error saving fine: " + e.getMessage());
+            System.err.println("Error saving fine: " + e.getMessage());
         }
     }
 
