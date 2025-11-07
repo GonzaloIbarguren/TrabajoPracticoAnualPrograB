@@ -4,87 +4,48 @@ import Model.Automobile;
 import Model.TrafficFine;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrafficFineDAO {
 
     public void saveFine(TrafficFine fine){
-        String sql = "INSERT INTO fines (id_fine,issue_date,amount,points_deducted,offence_type,description,id_car )"+
-                "VALUES (?,?,?,?,?,?,?)";
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)){
-
-            ps.setInt(1,fine.getFineNumber());
-            ps.setTimestamp(2,java.sql.Timestamp.valueOf(fine.getEvent().getDateTime()));
-            ps.setDouble(3,fine.getFinalAmount().doubleValue());
-            ps.setInt(4,fine.getPointScoring());
-            ps.setString(5,fine.getTypeInfraction().getType().toString());
-            ps.setString(6,fine.getTypeInfraction().getDescription());
-            ps.setInt(7,fine.getAutomobile().getId());
-
-            ps.executeUpdate();
-            System.out.println("✅ Fine registered successfully!");
-
-        }catch (SQLException e){
-            e.printStackTrace();
-            System.err.println("❌ Error saving fine: " + e.getMessage());
-        }
-
-    }
-
-    public List<String> findAllLicensePlates() throws SQLException {
-        List<String> plates = new ArrayList<>();
-        String sql = "SELECT licenseplate FROM automobiles";
+        String sql = """
+        INSERT INTO fine (infringement_type, description, infringement_date, amount, points, vehicle_plate)
+        VALUES (?, ?, ?, ?, ?, ?)
+        RETURNING fine_number
+    """;
 
         try (Connection conn = DataBaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                plates.add(rs.getString("licenseplate"));
+            // Seteamos los parámetros correctamente
+            ps.setString(1, fine.getTypeInfraction().toString());
+            ps.setString(2, fine.getTypeInfraction().toString());
+            ps.setTimestamp(3, Timestamp.valueOf(fine.getEvent().getDateTime()));
+            ps.setBigDecimal(4, fine.getFinalAmount());
+            ps.setInt(5, fine.getPointScoring());
+            ps.setString(6, fine.getAutomobile().getLicensePlate());
+
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                fine.setFineNumber(rs.getInt("fine_number"));
             }
+
+            System.out.println("Fine registered successfully! Fine number: " + fine.getFineNumber());
 
         } catch (SQLException e) {
-            System.err.println("Fail to obtain all license plates from database: " + e.getMessage());
+            e.printStackTrace();
+            System.err.println("Error saving fine: " + e.getMessage());
         }
-        return plates;
     }
 
-
-    public Automobile findAutomobileByPlate(String plate) throws SQLException {
-        String sql ="""
-        SELECT
-             a.id AS automobiles_id,
-             a.licenseplate,
-             a.color,
-             a.owner,
-             a.address,
-             m.id AS model_id,
-             m.name AS model_name,
-             mk.id AS vehiclemake_id,
-             mk.name AS vehiclemake_name
-        FROM automobiles a
-        JOIN model m ON a.id_model = m.id
-        JOIN vehiclemake mk ON m.id_make = mk.id
-        WHERE a.licenseplate = ?;
-    """;
-        try (Connection conn =  DataBaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, plate);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Automobile a = new Automobile();
-                    a.setId(rs.getInt("automobiles_id"));
-                    a.setLicensePlate(rs.getString("licenseplate"));
-                    a.setOwner(rs.getString("owner"));
-                    a.setId_model(rs.getInt("model_id"));
-                    a.setAddress(rs.getString("address"));
-                    return a;
-                } else {
-                    return null;
-                }
-            }
+    public long getNextFineNumber() throws SQLException {
+        String sql = "SELECT nextval('fine_number_seq')";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+            throw new SQLException("Could not get next fine number");
         }
     }
 

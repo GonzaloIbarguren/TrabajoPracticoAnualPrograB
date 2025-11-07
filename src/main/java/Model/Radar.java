@@ -1,16 +1,18 @@
 package Model;
 
+import dataBase.AutomobileDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
+import java.sql.SQLException;
 import java.util.Random;
 
 public class Radar extends Device implements Runnable, GenerateFine{
-    private int maximumVelocity;
+    private int velocidadMaxima;
     private boolean running;
 
-    public Radar(String id, GeoPosition location, int maximumVelocity) {
+    public Radar(String id, GeoPosition location, int velocidadMaxima) {
         super(id, location);
-        this.maximumVelocity = maximumVelocity;
+        this.velocidadMaxima = velocidadMaxima;
     }
 
     @Override
@@ -26,34 +28,39 @@ public class Radar extends Device implements Runnable, GenerateFine{
                     simulateSpeeding();
 
 
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | SQLException e) {
                 System.out.println("Radar failure.");
                 running = false;
             }
         }
     }
 
-    public int getMaximumVelocity() {
-        return maximumVelocity;
+    public int getVelocidadMaxima() {
+        return velocidadMaxima;
     }
 
-    public void setMaximumVelocity(int maximumVelocity) {
-        this.maximumVelocity = maximumVelocity;
+    public void setVelocidadMaxima(int velocidadMaxima) {
+        this.velocidadMaxima = velocidadMaxima;
     }
+
+
 
     @Override
     public String getTypeDevice() {
         return "radar";
     }
 
-    public void simulateSpeeding(){
+    public void simulateSpeeding() throws SQLException {
         Random random = new Random();
+        AutomobileDAO dao = new AutomobileDAO();
+        Automobile a = new Automobile();
+        a = dao.getRandomAutomobile();
 
         if (random.nextDouble() < 0.2){
             int simulatedVelocity = random.nextInt(0, 450);
 
-            if (simulatedVelocity > getMaximumVelocity()){
-                String licensePlate = generateRandomLicensePlate();
+            if (simulatedVelocity > getVelocidadMaxima()){
+                String licensePlate = a.getLicensePlate();
                 fineGenerate();
             }
         }
@@ -67,14 +74,13 @@ public class Radar extends Device implements Runnable, GenerateFine{
             int type = random.nextInt(TypesErrors.values().length - 1) + 1;
             setTypeError(TypesErrors.values()[type]);
             setState(State.FAILURE);
-            System.err.println("⚠️ Radar " + getId() + " failure: " + getTypeError());
-            running = true;
+            System.err.println("Radar " + getId() + " failure: " + getTypeError());
+            running = false;
         }
     }
 
     @Override
     public void fineGenerate(){
-        
     }
 
     @Override
@@ -86,7 +92,7 @@ public class Radar extends Device implements Runnable, GenerateFine{
             setTypeError(TypesErrors.NONE);
             setState(State.OPERATIONAL);
 
-            System.err.println("✅ Parking Camera " + getId() + " restored successfully.");
+            System.err.println("Parking Camera " + getId() + " restored successfully.");
 
             running = true;
             run();

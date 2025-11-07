@@ -9,7 +9,7 @@ import java.util.Random;
 public class AutomobileDAO {
 
     public Automobile getRandomAutomobile() throws SQLException {
-        String sql = "SELECT * FROM automobile ORDER BY RANDOM() LIMIT 1";
+        String sql = "SELECT * FROM automobiles ORDER BY RANDOM() LIMIT 1";
 
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -17,7 +17,7 @@ public class AutomobileDAO {
 
             if (rs.next()) {
                 return new Automobile(
-                        rs.getInt("id_car"),
+                        rs.getInt("id"),
                         rs.getString("licenseplate"),
                         rs.getString("owner"),
                         rs.getString("address"),
@@ -27,5 +27,40 @@ public class AutomobileDAO {
             }
         }
         throw new SQLException("No automobiles found in database");
+    }
+    public Automobile findAutomobileByPlate(String plate) throws SQLException {
+        String sql ="""
+        SELECT
+             a.id AS automobiles_id,
+             a.licenseplate,
+             a.color,
+             a.owner,
+             a.address,
+             m.id AS model_id,
+             m.name AS model_name,
+             mk.id AS vehiclemake_id,
+             mk.name AS vehiclemake_name
+        FROM automobiles a
+        JOIN model m ON a.id_model = m.id
+        JOIN vehiclemake mk ON m.id_make = mk.id
+        WHERE a.licenseplate = ?;
+    """;
+        try (Connection conn =  DataBaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, plate);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Automobile a = new Automobile();
+                    a.setId(rs.getInt("automobiles_id"));
+                    a.setLicensePlate(rs.getString("licenseplate"));
+                    a.setOwner(rs.getString("owner"));
+                    a.setId_model(rs.getInt("model_id"));
+                    a.setAddress(rs.getString("address"));
+                    return a;
+                } else {
+                    return null;
+                }
+            }
+        }
     }
 }

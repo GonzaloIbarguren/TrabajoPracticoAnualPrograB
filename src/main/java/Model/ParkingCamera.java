@@ -1,8 +1,13 @@
 package Model;
 
+import dataBase.AutomobileDAO;
 import org.jxmapviewer.viewer.GeoPosition;
+
+import java.awt.*;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -38,12 +43,16 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
                     checkInfraction();
                     simulateEntry();
                 }
+
             } catch (InterruptedException e) {
                 System.out.println("Parking camera failure.");
                 running = false;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
             SimulateError();
         }
+
     }
 
     @Override
@@ -56,11 +65,14 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
         return "parkingCamera";
     }
 
-    public void simulateEntry(){
+    public void simulateEntry() throws SQLException {
         Random random = new Random();
+        AutomobileDAO dao = new AutomobileDAO();
+        Automobile a = new Automobile();
+        a = dao.getRandomAutomobile();
 
         if (random.nextDouble() < 0.6) {
-            String licensePlate = generateRandomLicensePlate();
+            String licensePlate = a.getLicensePlate();
 
             if (!getParkedVehicles().containsKey(licensePlate)){
                 getParkedVehicles().put(licensePlate,LocalDateTime.now());
@@ -119,7 +131,7 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
             setState(State.FAILURE);
 
-            System.err.println("⚠️ Parking camera " + getId() + " failed: " + getTypeError());
+            System.err.println("Parking camera " + getId() + " failed: " + getTypeError());
 
             running = false;
         }
@@ -130,13 +142,13 @@ public class ParkingCamera extends Device implements Runnable, GenerateFine{
 
         if (getState() == State.FAILURE) {
 
-            System.err.println("👷‍♂️ Rebooting Parking Camera " + getId() + "...");
+            System.err.println("Rebooting Parking Camera " + getId() + "...");
 
             setTypeError(TypesErrors.NONE);
 
             setState(State.OPERATIONAL);
 
-            System.err.println("✅ Parking Camera " + getId() + " restored successfully.");
+            System.err.println("Parking Camera " + getId() + " restored successfully.");
 
             running = true;
 

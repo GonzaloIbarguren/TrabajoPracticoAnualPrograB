@@ -63,10 +63,19 @@ public class TrafficLightController extends Device implements Runnable, Generate
             TrafficFine fine = new RedLightFine(0,100,TypesInfraction.RED_LIGHT, randomAuto, location, BigDecimal.valueOf(10000));
 
             new TrafficFineDAO().saveFine(fine);
-            System.out.println("🚨 Fine generated: " + fine);
+            System.out.println("Fine generated: " + fine);
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    private void maybeGenerateFine() {
+        Random random = new Random();
+        double probability = 0.05;
+
+        if (random.nextDouble() < probability) {
+            System.out.println(" A vehicle ran the red light at " + getId());
+            fineGenerate();
         }
     }
 
@@ -77,7 +86,7 @@ public class TrafficLightController extends Device implements Runnable, Generate
             int type = random.nextInt(TypesErrors.values().length - 1) + 1;
             setTypeError(TypesErrors.values()[type]);
             setState(State.FAILURE);
-            System.err.println("⚠️ Traffic light " + getId() + " failed: " + getTypeError());
+            System.err.println("Traffic light " + getId() + " failed: " + getTypeError());
             light1.setState(Color.MAGENTA);
             light2.setState(Color.MAGENTA);
             running = false;
@@ -90,7 +99,7 @@ public class TrafficLightController extends Device implements Runnable, Generate
             System.err.println("👷‍♂️ Rebooting camera " + getId() + "...");
             setTypeError(TypesErrors.NONE);
             setState(State.OPERATIONAL);
-            System.err.println("✅ Camera " + getId() + " restored successfully.");
+            System.err.println("Camera " + getId() + " restored successfully.");
             running = true;
             intermittent = true;
             run();
@@ -129,6 +138,9 @@ public class TrafficLightController extends Device implements Runnable, Generate
             light1.nextState();
             Thread.sleep(durationYellow);
             light1.nextState();
+
+            maybeGenerateFine();
+
             System.out.println("doble rojo");
             Thread.sleep(durationTwoRed);
             light2.nextState();
