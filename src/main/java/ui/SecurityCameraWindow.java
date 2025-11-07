@@ -28,7 +28,7 @@ public class SecurityCameraWindow extends JFrame {
         }
 
         setTitle("Cámara de Seguridad - ID: " + cameraId + " | VISTA EN VIVO");
-        setSize(700, 500); // Un buen tamaño para visualizar el "accidente"
+        setSize(700, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -39,17 +39,14 @@ public class SecurityCameraWindow extends JFrame {
                 super.paintComponent(g);
 
                 if (accidentImage != null) {
-                    // Dibuja la imagen, escalándola para que se ajuste al tamaño del panel
                     g.drawImage(accidentImage, 0, 0, getWidth(), getHeight(), this);
 
-                    // Opcional: Agregar un texto de "grabando"
                     g.setColor(Color.RED);
                     g.fillOval(getWidth() - 30, 10, 20, 20);
                     g.setFont(new Font("Arial", Font.BOLD, 14));
                     g.drawString("LIVE", getWidth() - 70, 25);
 
                 } else {
-                    // Si la imagen falla, muestra un mensaje de error grande
                     g.setColor(Color.BLACK);
                     g.fillRect(0, 0, getWidth(), getHeight());
                     g.setColor(Color.RED);
@@ -63,25 +60,20 @@ public class SecurityCameraWindow extends JFrame {
             }
         };
 
-        // --- 4. Botón de Notificación (el operador debe confirmar la alerta) ---
         JButton notifyButton = new JButton("Notificar Emergencia (Accidente confirmado)");
         notifyButton.setFont(new Font("Arial", Font.BOLD, 14));
         notifyButton.setBackground(Color.RED.darker());
         notifyButton.setForeground(Color.WHITE);
         notifyButton.setFocusPainted(false);
 
-        // Acción del botón: Simula la notificación
         notifyButton.addActionListener(e -> {
-            // Aquí deberías llamar al método notifyEmergencyServices de tu modelo.
-            // Por ejemplo: centralController.notify(cameraId, "ACCIDENTE DE TRÁFICO", "POLICE", "EMS");
             JOptionPane.showMessageDialog(this,
                     "Alerta de Accidente enviada a Policía y Servicios Médicos.\nCámara " + cameraId + " confirmada.",
                     "Notificación Enviada",
                     JOptionPane.INFORMATION_MESSAGE);
-            this.dispose(); // Cierra la ventana después de notificar
+            this.dispose();
         });
 
-        // --- 5. Ensamblaje Final ---
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(Color.DARK_GRAY);
         bottomPanel.add(notifyButton);
@@ -92,8 +84,4 @@ public class SecurityCameraWindow extends JFrame {
         setVisible(true);
     }
 
-  //   Si necesitas que la ventana solo se abra con un ID:
-     public static void main(String[] args) {
-         SwingUtilities.invokeLater(() -> new SecurityCameraWindow("C-42"));
-     }
 }
