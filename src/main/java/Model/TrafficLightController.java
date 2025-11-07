@@ -96,14 +96,23 @@ public class TrafficLightController extends Device implements Runnable, Generate
     @Override
     public void FixError() {
         if (getState() == State.FAILURE) {
-            System.err.println("👷‍♂️ Rebooting camera " + getId() + "...");
+            System.err.println("Rebooting traffic light " + getId() + "...");
+
             setTypeError(TypesErrors.NONE);
             setState(State.OPERATIONAL);
-            System.err.println("Camera " + getId() + " restored successfully.");
-            running = true;
-            intermittent = true;
-            run();
 
+            light1.setState(Color.RED);
+            light2.setState(Color.RED);
+
+            System.err.println("Traffic light " + getId() + " restored successfully.");
+
+            if (!running) {
+                running = true;
+                intermittent = true;
+
+                Thread t = new Thread(this);
+                t.start();
+            }
         }
     }
 
