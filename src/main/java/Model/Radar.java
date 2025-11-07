@@ -1,7 +1,9 @@
 package Model;
 
+import dataBase.AutomobileDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
+import java.sql.SQLException;
 import java.util.Random;
 
 public class Radar extends Device implements Runnable, GenerateFine{
@@ -26,7 +28,7 @@ public class Radar extends Device implements Runnable, GenerateFine{
                     simulateSpeeding();
 
 
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | SQLException e) {
                 System.out.println("Radar failure.");
                 running = false;
             }
@@ -51,14 +53,17 @@ public class Radar extends Device implements Runnable, GenerateFine{
         return "radar";
     }
 
-    public void simulateSpeeding(){
+    public void simulateSpeeding() throws SQLException {
         Random random = new Random();
+        AutomobileDAO dao = new AutomobileDAO();
+        Automobile a = new Automobile();
+        a = dao.getRandomAutomobile();
 
         if (random.nextDouble() < 0.2){
             int simulatedVelocity = random.nextInt(0, 450);
 
             if (simulatedVelocity > getVelocidadMaxima()){
-                String licensePlate = generateRandomLicensePlate();
+                String licensePlate = a.getLicensePlate();
                 fineGenerate();
             }
         }
@@ -73,13 +78,12 @@ public class Radar extends Device implements Runnable, GenerateFine{
             setTypeError(TypesErrors.values()[type]);
             setState(State.FAILURE);
             System.err.println("⚠️ Radar " + getId() + " failure: " + getTypeError());
-            running = true;
+            running = false;
         }
     }
 
     @Override
     public void fineGenerate(){
-        
     }
 
     @Override

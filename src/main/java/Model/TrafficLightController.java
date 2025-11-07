@@ -69,6 +69,15 @@ public class TrafficLightController extends Device implements Runnable, Generate
             e.printStackTrace();
         }
     }
+    private void maybeGenerateFine() {
+        Random random = new Random();
+        double probability = 0.05;
+
+        if (random.nextDouble() < probability) {
+            System.out.println(" A vehicle ran the red light at " + getId());
+            fineGenerate();
+        }
+    }
 
     @Override
     public void SimulateError() {
@@ -129,6 +138,9 @@ public class TrafficLightController extends Device implements Runnable, Generate
             light1.nextState();
             Thread.sleep(durationYellow);
             light1.nextState();
+
+            maybeGenerateFine();
+
             System.out.println("doble rojo");
             Thread.sleep(durationTwoRed);
             light2.nextState();
