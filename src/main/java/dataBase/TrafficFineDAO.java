@@ -17,7 +17,6 @@ public class TrafficFineDAO {
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Seteamos los parámetros correctamente
             ps.setString(1, fine.getTypeInfraction().toString());
             ps.setString(2, fine.getTypeInfraction().toString());
             ps.setTimestamp(3, Timestamp.valueOf(fine.getEvent().getDateTime()));
@@ -48,7 +47,4 @@ public class TrafficFineDAO {
             throw new SQLException("Could not get next fine number");
         }
     }
-
-
-
 }

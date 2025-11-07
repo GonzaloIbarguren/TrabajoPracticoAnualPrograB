@@ -309,6 +309,15 @@ public class MapWindows extends JFrame {
             }
             new Thread(controller).start();
         }
+
+        for (SecurityCamera controller : securityCameras){
+            try{
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new Thread(controller).start();
+        }
     }
 
     private void startUpdating() {

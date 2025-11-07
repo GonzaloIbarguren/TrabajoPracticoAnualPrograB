@@ -9,22 +9,14 @@ import ui.TrafficLightWindows;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class UrbanMonitoringCenter{
-    private boolean running;
     private List<Device> devices = loadDevice("Device.json");
     private MapWindows map;
-    private TrafficLightWindows windows;
 
     public UrbanMonitoringCenter()  {
         this.map = new MapWindows(devices);
@@ -100,12 +92,9 @@ public class UrbanMonitoringCenter{
                 int maximumVelocity = controller.getInt("maximumVelocity");
                 listDevice.add(new Radar(id,new GeoPosition(lat,lng),maximumVelocity));
             }
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return listDevice;
     }
 
