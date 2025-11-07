@@ -1,7 +1,6 @@
 package dataBase;
 
 import Model.Automobile;
-import Model.AutomobileModel;
 import Model.TrafficFine;
 
 import java.sql.*;
@@ -79,7 +78,7 @@ public class TrafficFineDAO {
                     a.setId(rs.getInt("automobiles_id"));
                     a.setLicensePlate(rs.getString("licenseplate"));
                     a.setOwner(rs.getString("owner"));
-                    a.setModel(new AutomobileModel(rs.getInt("model_id"),rs.getString("model_name")));
+                    a.setId_model(rs.getInt("model_id"));
                     a.setAddress(rs.getString("address"));
                     return a;
                 } else {

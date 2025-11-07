@@ -1,39 +1,42 @@
 package Model;
 
+import java.awt.*;
+
 public class Automobile {
     private int id;
     private String licensePlate;
     private String owner;
     private String address;
-    private AutomobileModel model;
-    private String colour;
+    private String color;
+    private int id_model;
 
     public Automobile() {
     }
 
-    public Automobile(int id, String licensePlate, String owner, String address,AutomobileModel model, String colour){
+    public Automobile(int id, String licensePlate, String owner, String address, String color, int id_model){
         this.id = id;
         this.address = address;
         this.licensePlate = licensePlate;
         this.owner = owner;
-        this.model = model;
-        this.colour = colour;
+        this.color = color;
+        this.id_model = id_model;
+
     }
 
-    public String getColour() {
-        return colour;
+    public String getColor() {
+        return color;
     }
 
-    public void setColour(String colour) {
-        this.colour = colour;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public AutomobileModel getModel() {
-        return model;
+    public int getId_model() {
+        return id_model;
     }
 
-    public void setModel(AutomobileModel model) {
-        this.model = model;
+    public void setId_model(int id_model) {
+        this.id_model = id_model;
     }
 
     public int getId() {
@@ -67,4 +70,5 @@ public class Automobile {
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
     }
+
 }
