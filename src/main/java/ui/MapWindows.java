@@ -25,7 +25,14 @@ public class MapWindows extends JFrame {
     private List<TrafficLightController> controllers;
     private List<SecurityCamera>  securityCameras;
     private List<ParkingCamera> parkingCameras;
-   private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
+    private final List<Radar> radars = new CopyOnWriteArrayList<>(loadRadarsFromTxt());
+    private ReportsWindows reportsWindow;
+    private boolean showTrafficLights = true;
+    private boolean showRadars = true;
+    private boolean showSecurityCameras = true;
+    private boolean showParkingCameras = true;
+    private boolean showOnlyFaulty = false;
+
 
     public MapWindows(List<Device> deviceList) {
         super("MAP");
@@ -115,66 +122,143 @@ public class MapWindows extends JFrame {
 
 
         map.setOverlayPainter((g, mapViewer, width, height) -> {
-            for (TrafficLightController controller : lightsControllers) {
-                GeoPosition pos = controller.getLocation();
-                Color color = controller.getLightMain().getState();
-                Point2D worldPt = mapViewer.getTileFactory().geoToPixel(pos, mapViewer.getZoom());
-                Rectangle viewport = mapViewer.getViewportBounds();
 
-                int x = (int) (worldPt.getX() - viewport.getX());
-                int y = (int) (worldPt.getY() - viewport.getY());
+            if (showTrafficLights) {
+                for (TrafficLightController controller : lightsControllers) {
+                    if (!showOnlyFaulty || controller.getState() == State.FAILURE) {
+                        GeoPosition pos = controller.getLocation();
+                        Color color = controller.getLightMain().getState();
+                        Point2D worldPt = mapViewer.getTileFactory().geoToPixel(pos, mapViewer.getZoom());
+                        Rectangle viewport = mapViewer.getViewportBounds();
 
-                int size = 15;
-                g.setColor(color);
-                g.fillOval(x - size / 2, y - size / 2, size, size);
-                g.setColor(Color.BLACK);
-                g.drawOval(x - size / 2, y - size / 2, size, size);
+                        int x = (int) (worldPt.getX() - viewport.getX());
+                        int y = (int) (worldPt.getY() - viewport.getY());
+
+                        int size = 15;
+                        g.setColor(color);
+                        g.fillOval(x - size / 2, y - size / 2, size, size);
+                        g.setColor(Color.BLACK);
+                        g.drawOval(x - size / 2, y - size / 2, size, size);
+                    }
+                }
             }
-           for (Radar radar : radars) {
-                Point2D pt = mapViewer.getTileFactory().geoToPixel(
-                        radar.getLocation(),
-                        mapViewer.getZoom()
-                );
-                Rectangle viewport = mapViewer.getViewportBounds();
+           if (showRadars) {
+                   for (Radar radar : radars) {
+                       if (!showOnlyFaulty || radar.getState() == State.FAILURE) {
+                           Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                                   radar.getLocation(),
+                                   mapViewer.getZoom()
+                           );
+                           Rectangle viewport = mapViewer.getViewportBounds();
 
-                int x = (int) (pt.getX() - viewport.getX());
-                int y = (int) (pt.getY() - viewport.getY());
+                           int x = (int) (pt.getX() - viewport.getX());
+                           int y = (int) (pt.getY() - viewport.getY());
 
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/RedRadar.PNG")));
-                Image img = icon.getImage();
-                g.drawImage(img, x-10, y-10, 20, 20, null);
-            }
-            for (SecurityCamera securityCamera: securityCameras) {
-                Point2D pt = mapViewer.getTileFactory().geoToPixel(
-                        securityCamera.getLocation(),
-                        mapViewer.getZoom()
-                );
-                Rectangle viewport = mapViewer.getViewportBounds();
+                           ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/RedRadar.PNG")));
+                           Image img = icon.getImage();
+                           g.drawImage(img, x - 10, y - 10, 20, 20, null);
+                       }
+                   }
+           }
+           if (showSecurityCameras) {
+               for (SecurityCamera securityCamera : securityCameras) {
+                   if (!showOnlyFaulty || securityCamera.getState() == State.FAILURE) {
+                       Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                               securityCamera.getLocation(),
+                               mapViewer.getZoom()
+                       );
+                       Rectangle viewport = mapViewer.getViewportBounds();
 
-                int x = (int) (pt.getX() - viewport.getX());
-                int y = (int) (pt.getY() - viewport.getY());
+                       int x = (int) (pt.getX() - viewport.getX());
+                       int y = (int) (pt.getY() - viewport.getY());
 
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/SecurityCamera.png")));
-                Image img = icon.getImage();
-                g.drawImage(img, x-10, y-10, 20, 20, null);
-            }
-            for (ParkingCamera parkingCamera: parkingCameras) {
-                Point2D pt = mapViewer.getTileFactory().geoToPixel(
-                        parkingCamera.getLocation(),
-                        mapViewer.getZoom()
-                );
-                Rectangle viewport = mapViewer.getViewportBounds();
+                       ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/SecurityCamera.png")));
+                       Image img = icon.getImage();
+                       g.drawImage(img, x - 10, y - 10, 20, 20, null);
+                   }
+               }
+           }
+           if (showParkingCameras) {
+               for (ParkingCamera parkingCamera : parkingCameras) {
+                   if (!showOnlyFaulty || parkingCamera.getState() == State.FAILURE) {
+                       Point2D pt = mapViewer.getTileFactory().geoToPixel(
+                               parkingCamera.getLocation(),
+                               mapViewer.getZoom()
+                       );
+                       Rectangle viewport = mapViewer.getViewportBounds();
 
-                int x = (int) (pt.getX() - viewport.getX());
-                int y = (int) (pt.getY() - viewport.getY());
+                       int x = (int) (pt.getX() - viewport.getX());
+                       int y = (int) (pt.getY() - viewport.getY());
 
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ParkingCamera.png")));
-                Image img = icon.getImage();
-                g.drawImage(img, x-10, y-10, 20, 20, null);
-            }
-
+                       ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ParkingCamera.png")));
+                       Image img = icon.getImage();
+                       g.drawImage(img, x - 10, y - 10, 20, 20, null);
+                   }
+               }
+           }
 
         });
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        JButton reportsButton = new JButton("REPORTS");
+        reportsButton.setFont(new Font("Arial", Font.BOLD, 14));
+
+
+        reportsButton.addActionListener(e -> {
+            if (reportsWindow == null || !reportsWindow.isDisplayable()) {
+                reportsWindow = new ReportsWindows(deviceList);
+            } else {
+                reportsWindow.toFront();
+                reportsWindow.requestFocus();
+            }
+        });
+
+        buttonsPanel.add(reportsButton);
+        add(buttonsPanel,BorderLayout.SOUTH);
+
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new FlowLayout());
+
+        JCheckBox chkLights = new JCheckBox("Traffic Lights", true);
+        JCheckBox chkRadars = new JCheckBox("Radars", true);
+        JCheckBox chkSecurity = new JCheckBox("Security Cameras", true);
+        JCheckBox chkParking = new JCheckBox("Parking Cameras", true);
+        JCheckBox chkFaulty = new JCheckBox("Only Faulty", false);
+
+        filterPanel.add(chkLights);
+        filterPanel.add(chkRadars);
+        filterPanel.add(chkSecurity);
+        filterPanel.add(chkParking);
+        filterPanel.add(chkFaulty);
+
+        chkLights.addActionListener(e -> {
+            showTrafficLights = chkLights.isSelected();
+            map.repaint();
+        });
+        chkRadars.addActionListener(e -> {
+            showRadars = chkRadars.isSelected();
+            map.repaint();
+        });
+        chkSecurity.addActionListener(e -> {
+            showSecurityCameras = chkSecurity.isSelected();
+            map.repaint();
+        });
+        chkParking.addActionListener(e -> {
+            showParkingCameras = chkParking.isSelected();
+            map.repaint();
+        });
+        chkFaulty.addActionListener(e -> {
+            showOnlyFaulty = chkFaulty.isSelected();
+            map.repaint();
+        });
+
+        add(filterPanel, BorderLayout.NORTH);
+
+
+
+
         add(map);
         setVisible(true);
         startUpdating();
@@ -190,7 +274,15 @@ public class MapWindows extends JFrame {
             new Thread(controller).start();
 
         }
+
     }
+
+
+
+
+
+
+
 
     private void startUpdating() {
         Timer timer = new Timer(500, e -> updateMap());

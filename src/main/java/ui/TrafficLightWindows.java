@@ -120,6 +120,7 @@ public class TrafficLightWindows extends JFrame {
         add(bottomPanel, BorderLayout.SOUTH);
 
 
+
         timer = new Timer(500, e -> panel.repaint());
         timer.start();
         add(panel);
