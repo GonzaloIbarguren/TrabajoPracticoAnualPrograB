@@ -7,25 +7,36 @@ public class Automobile {
     private String licensePlate;
     private String owner;
     private String address;
-    private AutomobileModel model;
+    private String color;
+    private int id_model;
 
     public Automobile() {
     }
 
-    public Automobile(int id, String licensePlate, String owner, String address,AutomobileModel model){
+    public Automobile(int id, String licensePlate, String owner, String address, String color, int id_model){
         this.id = id;
         this.address = address;
         this.licensePlate = licensePlate;
         this.owner = owner;
-        this.model = model;
+        this.color = color;
+        this.id_model = id_model;
+
     }
 
-    public AutomobileModel getModel() {
-        return model;
+    public String getColor() {
+        return color;
     }
 
-    public void setModel(AutomobileModel model) {
-        this.model = model;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getId_model() {
+        return id_model;
+    }
+
+    public void setId_model(int id_model) {
+        this.id_model = id_model;
     }
 
     public int getId() {

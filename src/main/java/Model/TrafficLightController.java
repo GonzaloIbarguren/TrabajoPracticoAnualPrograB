@@ -1,9 +1,18 @@
 package Model;
 
+import dataBase.AutomobileDAO;
+import dataBase.DataBaseConnection;
+import dataBase.TrafficFineDAO;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Random;
 
@@ -47,12 +56,24 @@ public class TrafficLightController extends Device implements Runnable, Generate
     }
     @Override
     public void fineGenerate() {
+        try {
+            Automobile randomAuto = new AutomobileDAO().getRandomAutomobile();
 
+            EventLocation location = new EventLocation(LocalDateTime.now(),light1.getStreet()+" y "+light2.getStreet(),getLocation());
+            TrafficFine fine = new RedLightFine(0,100,TypesInfraction.RED_LIGHT, randomAuto, location, BigDecimal.valueOf(10000));
+
+            new TrafficFineDAO().saveFine(fine);
+            System.out.println("🚨 Fine generated: " + fine);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
     @Override
     public void SimulateError() {
         Random random = new Random();
-        if (getState() == State.OPERATIONAL && random.nextDouble() < 0.50) {
+        if (getState() == State.OPERATIONAL && random.nextDouble() < 0.10) {
             int type = random.nextInt(TypesErrors.values().length - 1) + 1;
             setTypeError(TypesErrors.values()[type]);
             setState(State.FAILURE);

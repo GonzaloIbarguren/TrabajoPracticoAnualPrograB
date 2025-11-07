@@ -22,23 +22,19 @@ import java.time.format.DateTimeFormatter;
 public class TrafficFine implements Serializable {
     private int fineNumber;
     private int pointScoring;
-    private TypeInfraction typeInfraction;
+    private TypesInfraction typeInfraction;
     private Automobile automobile;
     private EventLocation event;
     private BigDecimal baseAmount, finalAmount;
 
-    public TrafficFine(int fineNumber,int pointScoring,TypeInfraction typeInfraction, Automobile automobile, EventLocation locationEvent, BigDecimal baseAmount) {
+    public TrafficFine(int fineNumber,int pointScoring,TypesInfraction typeInfraction, Automobile automobile, EventLocation locationEvent, BigDecimal baseAmount) {
         this.fineNumber = fineNumber;
         this.event = locationEvent;
         this.finalAmount = baseAmount;
         this.pointScoring = pointScoring;
         this.automobile =automobile;
         this.typeInfraction = typeInfraction;
-        try {
-            generatePDF();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     private void generatePDF() throws IOException {
@@ -138,7 +134,7 @@ public class TrafficFine implements Serializable {
         content.beginText();
         content.newLineAtOffset(70, 565);
         content.setFont(PDType1Font.HELVETICA, 12);
-        content.showText(typeInfraction.getDescription());
+        content.showText(typeInfraction.name());
         content.endText();
 
         content.beginText();
@@ -250,11 +246,11 @@ public class TrafficFine implements Serializable {
         return automobile;
     }
 
-    public TypeInfraction getTypeInfraction() {
+    public TypesInfraction getTypeInfraction() {
         return typeInfraction;
     }
 
-    public void setTypeInfraction(TypeInfraction typeInfraction) {
+    public void setTypeInfraction(TypesInfraction typeInfraction) {
         this.typeInfraction = typeInfraction;
     }
 
