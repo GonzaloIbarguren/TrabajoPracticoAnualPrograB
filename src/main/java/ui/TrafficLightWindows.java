@@ -1,7 +1,7 @@
 package ui;
 
 import Model.Orientation;
-import Model.TrafficLightController;
+import Model.Devices.TrafficLightController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ public class TrafficLightWindows extends JFrame {
 
     public TrafficLightWindows(TrafficLightController controller) {
         this.controller = controller;
-        backgroundImage = new ImageIcon(Objects.requireNonNull(TrafficLightWindows.class.getResource("/street.png"))).getImage();
+        backgroundImage = new ImageIcon(Objects.requireNonNull(TrafficLightWindows.class.getResource("/deviceImages/street.png"))).getImage();
 
 
         setTitle("Traffic Light info");

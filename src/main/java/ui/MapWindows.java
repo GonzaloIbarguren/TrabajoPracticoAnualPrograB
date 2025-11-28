@@ -1,13 +1,12 @@
 package ui;
 
 import Model.*;
+import Model.Devices.*;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-
-
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.*;
@@ -19,7 +18,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapWindows extends JFrame {
     private List<TrafficLightController> controllers;
@@ -33,15 +31,13 @@ public class MapWindows extends JFrame {
     private boolean showParkingCameras = true;
     private boolean showOnlyFaulty = false;
 
-
-
     public MapWindows(List<Device> deviceList) {
         super("MAP");
         setSize(600, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         List<TrafficLightController> lightsControllers = new ArrayList<>();
-        List<SecurityCamera>  securityCameras = new ArrayList<>();
+        List<SecurityCamera> securityCameras = new ArrayList<>();
         List<ParkingCamera> parkingCameras = new ArrayList<>();
         List<Radar> radars = new ArrayList<>();
 
@@ -60,7 +56,6 @@ public class MapWindows extends JFrame {
                     radars.add((Radar) d);
             }
         }
-
 
         JXMapViewer map = new JXMapViewer();
         TileFactoryInfo info = new TileFactoryInfo(
@@ -89,11 +84,11 @@ public class MapWindows extends JFrame {
             if (e.getWheelRotation() < 0 && zoom > 3) {
                 map.setZoom(zoom - 1);
             }
+
             if (e.getWheelRotation() > 0 && zoom < 5) {
                 map.setZoom(zoom + 1);
             }
         });
-
 
        map.addMouseListener(new MouseAdapter() {
            @Override
@@ -105,21 +100,22 @@ public class MapWindows extends JFrame {
                Point2D point2D = new Point2D.Double(x, y);
                GeoPosition geo = map.getTileFactory().pixelToGeo(point2D, map.getZoom());
 
-               //System.out.println(+ geo.getLatitude()+","+ geo.getLongitude());
-
                TrafficLightController clickedTrafficLight = null;
                double threshold = 0.0002;
-                for (TrafficLightController controller : lightsControllers){
-                    double dx = Math.abs(controller.getLocation().getLatitude() - geo.getLatitude());
-                    double dy = Math.abs(controller.getLocation().getLongitude() - geo.getLongitude());
 
-                    if (dx < threshold && dy < threshold){
-                        clickedTrafficLight = controller;
-                    }
-                }
-                if (clickedTrafficLight !=null){
-                    new  TrafficLightWindows(clickedTrafficLight);
-                }
+               for (TrafficLightController controller : lightsControllers){
+                   double dx = Math.abs(controller.getLocation().getLatitude() - geo.getLatitude());
+                   double dy = Math.abs(controller.getLocation().getLongitude() - geo.getLongitude());
+
+                   if (dx < threshold && dy < threshold){
+                       clickedTrafficLight = controller;
+                   }
+               }
+
+               if (clickedTrafficLight !=null){
+                   new  TrafficLightWindows(clickedTrafficLight);
+               }
+
                for (SecurityCamera camera : securityCameras) {
                    double dx = Math.abs(camera.getLocation().getLatitude() - geo.getLatitude());
                    double dy = Math.abs(camera.getLocation().getLongitude() - geo.getLongitude());
@@ -128,6 +124,7 @@ public class MapWindows extends JFrame {
                        new SecurityCameraWindow(camera.getId());
                    }
                }
+
                for (ParkingCamera camera : parkingCameras) {
                    double dx = Math.abs(camera.getLocation().getLatitude() - geo.getLatitude());
                    double dy = Math.abs(camera.getLocation().getLongitude() - geo.getLongitude());
@@ -139,11 +136,10 @@ public class MapWindows extends JFrame {
            }
        });
 
-
-
         map.setOverlayPainter((g, mapViewer, width, height) -> {
             if (showTrafficLights) {
                 for (TrafficLightController controller : lightsControllers) {
+
                     if (!showOnlyFaulty || controller.getState() == State.FAILURE) {
                         GeoPosition pos = controller.getLocation();
                         Color color = controller.getLightMain().getState();
@@ -164,6 +160,7 @@ public class MapWindows extends JFrame {
 
             if (showRadars) {
                 for (Radar radar : radars) {
+
                     if (!showOnlyFaulty || radar.getState() == State.FAILURE) {
                         Point2D pt = mapViewer.getTileFactory().geoToPixel(
                                 radar.getLocation(),
@@ -174,14 +171,16 @@ public class MapWindows extends JFrame {
                         int x = (int) (pt.getX() - viewport.getX());
                         int y = (int) (pt.getY() - viewport.getY());
 
-                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/RedRadar.PNG")));
+                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/deviceImages/RedRadar.PNG")));
                         Image img = icon.getImage();
                         g.drawImage(img, x - 10, y - 10, 20, 20, null);
                     }
                 }
             }
+
             if (showSecurityCameras) {
                 for (SecurityCamera securityCamera : securityCameras) {
+
                     if (!showOnlyFaulty || securityCamera.getState() == State.FAILURE) {
                         Point2D pt = mapViewer.getTileFactory().geoToPixel(
                                 securityCamera.getLocation(),
@@ -192,14 +191,16 @@ public class MapWindows extends JFrame {
                         int x = (int) (pt.getX() - viewport.getX());
                         int y = (int) (pt.getY() - viewport.getY());
 
-                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/SecurityCamera.png")));
+                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/deviceImages/SecurityCamera.png")));
                         Image img = icon.getImage();
                         g.drawImage(img, x - 10, y - 10, 20, 20, null);
                     }
                 }
             }
+
             if (showParkingCameras) {
                 for (ParkingCamera parkingCamera : parkingCameras) {
+
                     if (!showOnlyFaulty || parkingCamera.getState() == State.FAILURE) {
                         Point2D pt = mapViewer.getTileFactory().geoToPixel(
                                 parkingCamera.getLocation(),
@@ -210,32 +211,62 @@ public class MapWindows extends JFrame {
                         int x = (int) (pt.getX() - viewport.getX());
                         int y = (int) (pt.getY() - viewport.getY());
 
-                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ParkingCamera.png")));
+                        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/deviceImages/ParkingCamera.png")));
                         Image img = icon.getImage();
                         g.drawImage(img, x - 10, y - 10, 20, 20, null);
                     }
                 }
             }
-
         });
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
+        buttonsPanel.setOpaque(false);
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        centerPanel.setOpaque(false);
 
         JButton reportsButton = new JButton("REPORTS");
         reportsButton.setFont(new Font("Arial", Font.BOLD, 14));
-
-
+        reportsButton.setFocusPainted(false);
         reportsButton.addActionListener(e -> {
-                    if (reportsWindow == null || !reportsWindow.isDisplayable()) {
-                        reportsWindow = new ReportsWindows(deviceList);
-                    } else {
-                        reportsWindow.toFront();
-                        reportsWindow.requestFocus();
-                    }
+            if (reportsWindow == null || !reportsWindow.isDisplayable()) {
+                reportsWindow = new ReportsWindows(deviceList);
+            } else {
+                reportsWindow.toFront();
+                reportsWindow.requestFocus();
+            }
         });
+        centerPanel.add(reportsButton);
 
-        buttonsPanel.add(reportsButton);
-        add(buttonsPanel,BorderLayout.SOUTH);
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.setOpaque(false);
+
+        JButton resetButton = new JButton("RESET SYSTEM");
+        resetButton.setFont(new Font("Arial", Font.BOLD, 10));
+        resetButton.setBackground(new Color(220, 53, 69));
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setFocusPainted(false);
+
+        resetButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to reset the system?",
+                    "System Factory Reset",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                UrbanMonitoringCenter.stateReset();
+            }
+        });
+        rightPanel.add(resetButton);
+
+        buttonsPanel.add(centerPanel, BorderLayout.CENTER);
+        buttonsPanel.add(rightPanel, BorderLayout.EAST);
+
+        add(buttonsPanel, BorderLayout.SOUTH);
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new FlowLayout());
@@ -256,18 +287,22 @@ public class MapWindows extends JFrame {
             showTrafficLights = chkLights.isSelected();
             map.repaint();
         });
+
         chkRadars.addActionListener(e -> {
             showRadars = chkRadars.isSelected();
             map.repaint();
         });
+
         chkSecurity.addActionListener(e -> {
             showSecurityCameras = chkSecurity.isSelected();
             map.repaint();
         });
+
         chkParking.addActionListener(e -> {
             showParkingCameras = chkParking.isSelected();
             map.repaint();
         });
+
         chkFaulty.addActionListener(e -> {
             showOnlyFaulty = chkFaulty.isSelected();
             map.repaint();
@@ -275,35 +310,43 @@ public class MapWindows extends JFrame {
 
         add(filterPanel, BorderLayout.NORTH);
 
-
         add(map);
         setVisible(true);
         startUpdating();
 
-
        for (TrafficLightController controller : lightsControllers) {
-
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            new Thread(controller).start();
 
+            new Thread(controller).start();
         }
 
         for (ParkingCamera controller : parkingCameras){
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             new Thread(controller).start();
         }
 
         for (Radar controller : radars){
-            try{
-                Thread.sleep(2000);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(controller).start();
+        }
+
+        for (SecurityCamera controller : securityCameras){
+            try {
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -328,34 +371,4 @@ public class MapWindows extends JFrame {
         }
 
     }
-
-    private List<Radar> loadRadarsFromTxt() {
-        List<Radar> list = new ArrayList<>();
-        InputStream input = getClass().getClassLoader().getResourceAsStream("Radar.txt");
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(input))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",");
-
-                double lat = Double.parseDouble(parts[0].trim());
-                double lon = Double.parseDouble(parts[1].trim());
-                int velocidadMax = Integer.parseInt(parts[2].trim());
-
-                Radar radar = new Radar(
-                        "Radar_" + list.size(),
-                        new GeoPosition(lat,lon),
-                        velocidadMax );
-
-                list.add(radar);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-
-
 }

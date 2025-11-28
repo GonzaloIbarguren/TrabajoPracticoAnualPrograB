@@ -1,11 +1,12 @@
 package ui;
 
-import Model.*;
+import Model.Devices.*;
 import dataBase.DataBaseConnection;
 
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +27,7 @@ public class ReportsWindows extends JFrame {
         textArea.setPreferredSize(new Dimension(900, 600));
 
         JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(5, 1, 5, 5)); // 5 filas, 1 columna
+        leftPanel.setLayout(new GridLayout(7, 1, 5, 5));
         leftPanel.setBackground(Color.gray);
         leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -36,11 +37,22 @@ public class ReportsWindows extends JFrame {
         JButton btnSecurityReport = new JButton("Security Reports");
         JButton btnEventsReport = new JButton("Events Reports");
 
+        JButton btnVehicleReg = new JButton("Vehicle Registration");
+        btnVehicleReg.setBackground(new Color(70, 130, 180));
+        btnVehicleReg.setForeground(Color.WHITE);
+
+        JButton btnResetFines = new JButton("Reset All Fines");
+        btnResetFines.setBackground(new Color(255, 102, 102));
+        btnResetFines.setForeground(Color.WHITE);
+
         leftPanel.add(btnDeviceReport);
         leftPanel.add(btnFinesReport);
         leftPanel.add(btnLicenseReport);
         leftPanel.add(btnSecurityReport);
         leftPanel.add(btnEventsReport);
+
+        leftPanel.add(btnVehicleReg);
+        leftPanel.add(btnResetFines);
 
         reportArea = new JTextArea();
         reportArea.setEditable(false);
@@ -56,7 +68,7 @@ public class ReportsWindows extends JFrame {
         btnFinesReport.addActionListener(e -> showFinesReport());
         btnLicenseReport.addActionListener(e -> {
             String plate = JOptionPane.showInputDialog(
-                    this, // ventana padre
+                    this,
                     "Enter the vehicle plate:",
                     "Search Fines",
                     JOptionPane.QUESTION_MESSAGE
@@ -73,12 +85,51 @@ public class ReportsWindows extends JFrame {
                 );
             }
         });
-        //btnSecurityReport.addActionListener();
+        btnSecurityReport.addActionListener(e -> showSecurityReport());
         //btnEventsReport.addActionListener();
-
-
+        btnResetFines.addActionListener(e -> resetAllFines());
+        btnVehicleReg.addActionListener(e -> new VehicleRegistrationWindow().setVisible(true));
 
         setVisible(true);
+    }
+
+    private void resetAllFines() {
+        int response = JOptionPane.showConfirmDialog(this, "WARNING: This will delete ALL fines from the database permanently.\nDo you want to proceed?", "Reset",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (response == JOptionPane.YES_OPTION) {
+            try (Connection conn = DataBaseConnection.getConnection();
+                 java.sql.Statement stmt = conn.createStatement()) {
+
+                String sql = "TRUNCATE TABLE fine CASCADE";
+                stmt.executeUpdate(sql);
+
+                try {
+                    stmt.executeUpdate("ALTER SEQUENCE public.fine_number_seq RESTART WITH 1");
+                } catch (SQLException ex) {
+                    System.out.println("Fine number sequence couldn't be reset. ");
+                }
+//
+                try {
+                    stmt.executeUpdate("ALTER SEQUENCE public.fine_id_seq RESTART WITH 1");
+                } catch (SQLException e) {
+                    System.err.println("Fine ID sequence couldn't be reset.");
+                }
+
+                reportArea.setText("");
+                reportArea.append("===== SYSTEM MESSAGE =====\n\n");
+                reportArea.append("All fines have been successfully deleted.\n");
+                reportArea.append("Database counters reset.");
+
+                JOptionPane.showMessageDialog(this, "Fines database has been reset.", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error deleting fines: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
     }
 
     private void ShowDeviceReport(List<Device> deviceList){
@@ -134,11 +185,12 @@ public class ReportsWindows extends JFrame {
 
         reportArea.setText(report.toString());
     }
+
     public void showFinesReport() {
         StringBuilder report = new StringBuilder();
 
         try (Connection conn = DataBaseConnection.getConnection()) {
-            report.append("===== FINES REPORT (GROUPED BY TYPE) =====\n\n");
+            report.append("===== FINES REPORT (GROUPED BY TYPE & ORDERED BY AMOUNT) =====\n\n");
 
             PreparedStatement ps = conn.prepareStatement("""
             SELECT infringement_type, fine_number, vehicle_plate, description,
@@ -153,11 +205,12 @@ public class ReportsWindows extends JFrame {
             int count = 0;
             int totalCount = 0;
             BigDecimal totalSum = BigDecimal.ZERO;
+            BigDecimal maxAmount = BigDecimal.ZERO;
+            BigDecimal minAmount = null;
 
             while (rs.next()) {
                 String type = rs.getString("infringement_type");
 
-                // Cambio de tipo → mostrar subtotal anterior
                 if (currentType == null || !currentType.equals(type)) {
                     if (currentType != null) {
                         report.append(String.format("Subtotal for %s → Count: %d | Sum: $%.2f\n\n",
@@ -165,6 +218,7 @@ public class ReportsWindows extends JFrame {
                         totalCount += count;
                         totalSum = totalSum.add(subtotal);
                     }
+
                     currentType = type;
                     count = 0;
                     subtotal = BigDecimal.ZERO;
@@ -186,9 +240,14 @@ public class ReportsWindows extends JFrame {
 
                 subtotal = subtotal.add(amount);
                 count++;
+
+                if (amount.compareTo(maxAmount) > 0)
+                    maxAmount = amount;
+
+                if (minAmount == null || amount.compareTo(minAmount) < 0)
+                    minAmount = amount;
             }
 
-            // último subtotal
             if (currentType != null) {
                 report.append(String.format("\nSubtotal for %s → Count: %d | Sum: $%.2f\n",
                         currentType, count, subtotal));
@@ -196,13 +255,27 @@ public class ReportsWindows extends JFrame {
                 totalSum = totalSum.add(subtotal);
             }
 
-            // Totales globales
+            BigDecimal average = BigDecimal.ZERO;
+
+            if (totalCount > 0)
+                average = totalSum.divide(BigDecimal.valueOf(totalCount), 2, RoundingMode.HALF_UP);
+
+
             report.append("\n===== GLOBAL SUMMARY =====\n");
             report.append(String.format("Total fines: %d%n", totalCount));
             report.append(String.format("Total amount: $%.2f%n", totalSum.doubleValue()));
+            report.append(String.format("Average fine value: %.2f%n", average));
+            report.append("-".repeat(40)).append("\n");
+
+            if (minAmount != null)
+                report.append(String.format("Lowest fine value: %.2f%n", minAmount));
+            else
+                report.append(String.format("Lowest fine value: %.2f%n", BigDecimal.ZERO));
+
+            report.append(String.format("Highest fine value: %.2f%n", maxAmount));
 
         } catch (SQLException e) {
-            report.append(" Error loading fines: ").append(e.getMessage());
+            report.append("Error loading fines: ").append(e.getMessage());
             e.printStackTrace();
         }
 
@@ -210,6 +283,7 @@ public class ReportsWindows extends JFrame {
         reportArea.setText(report.toString());
         reportArea.setCaretPosition(0);
     }
+
     public void showFinesByPlate(String plate) {
         StringBuilder report = new StringBuilder();
 
@@ -223,11 +297,9 @@ public class ReportsWindows extends JFrame {
             int exists = rsCheck.getInt(1);
 
             if (exists == 0) {
-
                 reportArea.setText(" Vehicle plate not found in the database: " + plate);
                 return;
             }
-
 
             PreparedStatement ps = conn.prepareStatement("""
             SELECT fine_number, infringement_type, description,
@@ -278,6 +350,88 @@ public class ReportsWindows extends JFrame {
         reportArea.setCaretPosition(0);
     }
 
+    private void showSecurityReport() {
+        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JTextField txtInitialDate = new JTextField("2025-01-01");
+        JTextField txtInitialTime = new JTextField("00:00:00");
 
+        JTextField txtFinalDate = new JTextField("2025-12-31");
+        JTextField txtFinalTime = new JTextField("23:59:59");
 
+        panel.add(new JLabel("Initial date (YYYY-MM-DD):"));
+        panel.add(txtInitialDate);
+        panel.add(new JLabel("Final date (YYYY-MM-DD):"));
+        panel.add(txtFinalDate);
+
+        panel.add(new JLabel("Initial time (HH:MM:SS): "));
+        panel.add(txtInitialTime);
+        panel.add(new JLabel("Final time (HH:MM:SS): "));
+        panel.add(txtFinalTime);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "Security Report Filter", JOptionPane.OK_CANCEL_OPTION);
+        if (result != JOptionPane.OK_OPTION) return;
+
+        StringBuilder report = new StringBuilder();
+
+        String start = txtInitialDate.getText().trim() + " " + txtInitialTime.getText().trim();
+        String finalDateTime = txtFinalDate.getText().trim() + " " + txtFinalTime.getText().trim();
+
+        report.append("===== SECURITY REPORT =====\n");
+        report.append("From: ").append(start).append(" to ").append(finalDateTime).append("\n\n");
+
+        String[] requiredServices = {"Police", "Firefighters", "Medical"};
+
+        java.util.Map<String, Integer> counts = new java.util.HashMap<>();
+        for (String s : requiredServices) counts.put(s, 0);
+
+        int totalAlerts = 0;
+
+        String sql = """
+            SELECT service_type, COUNT(*) as qty 
+            FROM security_alerts 
+            WHERE alert_date BETWEEN ? AND ? 
+            GROUP BY service_type
+        """;
+
+        try (java.sql.Connection conn = dataBase.DataBaseConnection.getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            try {
+                ps.setTimestamp(1, java.sql.Timestamp.valueOf(start));
+                ps.setTimestamp(2, java.sql.Timestamp.valueOf(finalDateTime));
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, "Invalid date/time format.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            java.sql.ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String service = rs.getString("service_type");
+                int qty = rs.getInt("qty");
+                counts.put(service, qty);
+                totalAlerts += qty;
+            }
+
+            report.append(String.format("%-20s | %-10s | %-10s%n", "Service", "Amount", "% "));
+            report.append("--------------------------------------------------\n");
+
+            for (String service : requiredServices) {
+                int qty = counts.getOrDefault(service, 0);
+                double percentage = (totalAlerts == 0) ? 0.0 : ((double)qty / totalAlerts) * 100.0;
+
+                report.append(String.format("%-20s | %-10d | %6.2f%%%n", service, qty, percentage));
+            }
+
+            report.append("--------------------------------------------------\n");
+            report.append("TOTAL ALERTS: " + totalAlerts);
+
+        } catch (java.sql.SQLException e) {
+            report.append("\nError generating the report: ").append(e.getMessage());
+            e.printStackTrace();
+        }
+
+        reportArea.setText(report.toString());
+        reportArea.setCaretPosition(0);
+    }
 }

@@ -28,26 +28,30 @@ public class AutomobileDAO {
         }
         throw new SQLException("No automobiles found in database");
     }
+
     public Automobile findAutomobileByPlate(String plate) throws SQLException {
-        String sql ="""
+        String sql = """
         SELECT
              a.id AS automobiles_id,
              a.licenseplate,
              a.color,
              a.owner,
              a.address,
-             m.id AS model_id,
+             m.id_model AS model_id,
              m.name AS model_name,
-             mk.id AS vehiclemake_id,
+             mk.id_make AS vehiclemake_id,
              mk.name AS vehiclemake_name
         FROM automobiles a
-        JOIN model m ON a.id_model = m.id
-        JOIN vehiclemake mk ON m.id_make = mk.id
+        JOIN model m ON a.id_model = m.id_model
+        JOIN vehiclemake mk ON m.id_make = mk.id_make
         WHERE a.licenseplate = ?;
     """;
-        try (Connection conn =  DataBaseConnection.getConnection();
+
+        try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, plate);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Automobile a = new Automobile();
@@ -56,6 +60,8 @@ public class AutomobileDAO {
                     a.setOwner(rs.getString("owner"));
                     a.setId_model(rs.getInt("model_id"));
                     a.setAddress(rs.getString("address"));
+                    a.setColor(rs.getString("color"));
+
                     return a;
                 } else {
                     return null;
