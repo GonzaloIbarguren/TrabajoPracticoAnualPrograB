@@ -1,0 +1,330 @@
+{
+  "semaphoreControllers": [
+    {
+      "id": "Semaphore 1",
+      "lat": -38.00246974941653,
+      "lng": -57.55215883255005,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Bartolome Mitre",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 2",
+      "lat": -38.00297699686946,
+      "lng": -57.55115032196045,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "San Luis",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 3",
+      "lat": -38.0034842408135,
+      "lng": -57.55014181137085,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Córdoba",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 4",
+      "lat": -38.004008389202696,
+      "lng": -57.54913330078125,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Santiago del Estero",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 5",
+      "lat": -38.00449871817482,
+      "lng": -57.54818916320801,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Santa Fe",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 6",
+      "lat": -38.004989043868036,
+      "lng": -57.54718065261841,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Corrientes",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 7",
+      "lat": -38.00551318150038,
+      "lng": -57.54615068435669,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Entre Rios",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 8",
+      "lat": -38.00607113034664,
+      "lng": -57.54512071609497,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Buenos Aires",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 9",
+      "lat": -38.0065107234169,
+      "lng": -57.54419803619385,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Tucuman",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 10",
+      "lat": -38.00703485017138,
+      "lng": -57.54318952560425,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Arenales",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 11",
+      "lat": -38.00752515890448,
+      "lng": -57.54213809967041,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Lamadrid",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 12",
+      "lat": -38.00808309243976,
+      "lng": -57.54110813140869,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Las Heras",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 13",
+      "lat": -38.008556487261195,
+      "lng": -57.54016399383545,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Sarmiento",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 14",
+      "lat": -38.00904678581806,
+      "lng": -57.53913402557373,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Alsina",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 15",
+      "lat": -38.00955398777111,
+      "lng": -57.53806114196777,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Olavarria",
+        "orientation": "NORTH",
+        "main": false
+      }
+    },
+    {
+      "id": "Semaphore 16",
+      "lat": -38.01004427965681,
+      "lng": -57.53715991973877,
+      "semA": {
+        "street": "Av.Colon",
+        "orientation": "EAST",
+        "main": true
+      },
+      "semB": {
+        "street": "Martin M. de Güemes",
+        "orientation": "SOUTH",
+        "main": false
+      }
+    }
+  ],
+  "securityCameras": [
+    {
+      "id": "Camera 1",
+      "lat": -38.002148,
+      "lng": -57.552695
+    },
+    {
+      "id": "Camera 2",
+      "lat": -37.998327,
+      "lng": -57.548833
+    },
+    {
+      "id": "Camera 3",
+      "lat": -38.005462,
+      "lng": -57.542782
+    },
+    {
+      "id": "Camera 4",
+      "lat": -37.997304,
+      "lng": -57.546666
+    }
+  ],
+  "parkingCameras": [
+    {
+      "id": "Parking Camera 1",
+      "lat": -37.997854,
+      "lng": -57.551215,
+      "toleranceTime": 55
+    },
+    {
+      "id": "Parking Camera 2",
+      "lat": -38.000305,
+      "lng": -57.55394,
+      "toleranceTime": 60
+    },
+    {
+      "id": "Parking Camera 3",
+      "lat": -38.002115,
+      "lng": -57.548296,
+      "toleranceTime": 75
+    },
+    {
+      "id": "Parking Camera 4",
+      "lat": -38.003095,
+      "lng": -57.546344,
+      "toleranceTime": 65
+    }
+  ],
+  "radars": [
+    {
+      "id": "Radar 1",
+      "lat": -37.991309,
+      "lng": -57.54526,
+      "status": "READY",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 2",
+      "lat": -38.034774,
+      "lng": -57.537503,
+      "status": "READY",
+      "maximumVelocity": 70
+    },
+    {
+      "id": "Radar 3",
+      "lat": -38.034132,
+      "lng": -57.541151,
+      "status": "ERROR",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 4",
+      "lat": -37.995157,
+      "lng": -57.553028,
+      "status": "READY",
+      "maximumVelocity": 80
+    },
+    {
+      "id": "Radar 5",
+      "lat": -37.998851,
+      "lng": -57.545764,
+      "status": "ERROR",
+      "maximumVelocity": 60
+    }
+  ]
+}
+

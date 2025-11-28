@@ -1,8 +1,8 @@
 package dataBase;
 
-import Model.Automobile;
-import Model.TrafficFine;
+import Fine.TrafficFine;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class TrafficFineDAO {
@@ -24,13 +24,19 @@ public class TrafficFineDAO {
             ps.setInt(5, fine.getPointScoring());
             ps.setString(6, fine.getAutomobile().getLicensePlate());
 
-
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                fine.setFineNumber(rs.getInt("fine_number"));
+                int generatedId = rs.getInt("fine_number");
+                fine.setFineNumber(generatedId);
+
+                try {
+                    fine.generatePDF();
+                } catch (IOException e) {
+                    System.err.println("Error generating PDF for fine " + generatedId + ": " + e.getMessage());
+                }
             }
 
-            System.out.println("Fine registered successfully! Fine number: " + fine.getFineNumber());
+            System.out.println("Fine registered and PDF generated successfully! Fine number: " + fine.getFineNumber());
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,8 +1,11 @@
 package Model;
 
-import java.awt.*;
+import java.io.Serializable;
 
-public class Automobile {
+public class Automobile implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private int id;
     private String licensePlate;
     private String owner;
@@ -26,7 +29,6 @@ public class Automobile {
     public String getColor() {
         return color;
     }
-
     public void setColor(String color) {
         this.color = color;
     }
@@ -34,15 +36,11 @@ public class Automobile {
     public int getId_model() {
         return id_model;
     }
-
     public void setId_model(int id_model) {
         this.id_model = id_model;
     }
 
-    public int getId() {
-        return id;
-    }
-
+    public int getId() {return id;}
     public void setId(int id) {
         this.id = id;
     }
@@ -50,7 +48,6 @@ public class Automobile {
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -58,7 +55,6 @@ public class Automobile {
     public String getOwner() {
         return owner;
     }
-
     public void setOwner(String owner) {
         this.owner = owner;
     }
@@ -66,9 +62,7 @@ public class Automobile {
     public String getLicensePlate() {
         return licensePlate;
     }
-
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
     }
-
 }
